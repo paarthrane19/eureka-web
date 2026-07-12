@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-alt: #fafbfc;
+  --border: #e5e5e5;
+  --text: #000000;
+  --muted: #666666;
+  --faint: #9b9b9b;
+  --accent: #00e676;
+  --accent-text: #000000;
+  --accent-soft: #e4fff1;
+  --heart: #ff3b30;
+  --hairline: 0.5px;
+}
+
+.dark {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-alt: #0c0c0c;
+  --border: #1e1e1e;
+  --text: #ffffff;
+  --muted: #a1a1a1;
+  --faint: #5c5c5c;
+  --accent: #00e676;
+  --accent-text: #000000;
+  --accent-soft: #052617;
+  --heart: #ff453a;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  transition: background-color 130ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 130ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Journal hairline: a true 0.5px rule regardless of DPR. */
+.hairline-b {
+  border-bottom: var(--hairline) solid var(--border);
+}
+.hairline-t {
+  border-top: var(--hairline) solid var(--border);
+}
+.hairline-r {
+  border-right: var(--hairline) solid var(--border);
+}
+.hairline-l {
+  border-left: var(--hairline) solid var(--border);
+}
+.hairline {
+  border: var(--hairline) solid var(--border);
+}
+
+/* Thin, technical scrollbars that fit the instrument aesthetic. */
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-text);
+}
