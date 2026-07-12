@@ -10,6 +10,7 @@ import { categoryColor } from "@/lib/colors";
 import { api } from "@/lib/api";
 import { CATEGORIES } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ImagePicker } from "@/components/ImagePicker";
 
 export default function ComposePage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function ComposePage() {
   const [body, setBody] = useState("");
   const [category, setCategory] = useState<string>(CATEGORIES[0]);
   const [sourceUrl, setSourceUrl] = useState("");
+  const [images, setImages] = useState<string[]>([]);
 
   const create = useMutation({
     mutationFn: () =>
@@ -27,6 +29,7 @@ export default function ComposePage() {
         body: body.trim(),
         category,
         source_url: sourceUrl.trim() || null,
+        images,
       }),
     onSuccess: (post) => {
       qc.invalidateQueries({ queryKey: ["feed"] });
@@ -106,6 +109,13 @@ export default function ComposePage() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="mb-5">
+          <span className="mb-2 block font-mono text-2xs uppercase tracking-widest text-faint">
+            Images (optional)
+          </span>
+          <ImagePicker images={images} onChange={setImages} />
         </div>
 
         <label className="mb-6 block">

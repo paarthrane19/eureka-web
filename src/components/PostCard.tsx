@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, ChevronLeft, ChevronRight, MessageSquare, ChevronUp } from "lucide-react";
+import { Bookmark, ChevronLeft, ChevronRight, MessageSquare, ChevronUp, Pin } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +13,8 @@ import { Avatar } from "./Avatar";
 import { CategoryTag } from "./CategoryTag";
 import { CredibilityDots } from "./CredibilityIndicator";
 import { DepthDots, LEVEL_LABELS } from "./DepthDots";
+import { PostImages } from "./PostImages";
+import { VerifiedBadge } from "./VerifiedBadge";
 
 export function PostCard({
   post,
@@ -46,6 +48,12 @@ export function PostCard({
     >
       {active && <div className="absolute left-0 top-0 h-full w-[2px] bg-accent" />}
 
+      {post.pinned && (
+        <div className="mb-2 flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-faint">
+          <Pin size={11} className="text-accent" /> Pinned
+        </div>
+      )}
+
       <div className="mb-3 flex items-center justify-between">
         <CategoryTag category={post.category} />
         <CredibilityDots score={post.credibility?.score ?? 0} cells={8} />
@@ -62,6 +70,8 @@ export function PostCard({
           {levels[clamped]}
         </p>
       </div>
+
+      {post.images?.length > 0 && <PostImages images={post.images} />}
 
       {/* Depth navigation */}
       <div className="mt-4 flex items-center justify-between">
@@ -95,12 +105,23 @@ export function PostCard({
 
       {/* Meta + actions */}
       <div className="mt-5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Avatar name={post.author.name} color={post.author.avatar_color} size={24} />
-          <span className="font-mono text-2xs uppercase tracking-wider text-faint">
-            {post.author.name} · {relativeTime(post.created_at)}
+        <Link
+          href={`/profile/${post.author.username}`}
+          onClick={(e) => e.stopPropagation()}
+          className="group flex items-center gap-2"
+        >
+          <Avatar
+            name={post.author.name}
+            color={post.author.avatar_color}
+            src={post.author.avatar_url}
+            size={24}
+          />
+          <span className="flex items-center gap-1 font-mono text-2xs uppercase tracking-wider text-faint transition group-hover:text-muted">
+            {post.author.name}
+            {post.author.verified && <VerifiedBadge size={12} />}
+            <span className="text-faint">· {relativeTime(post.created_at)}</span>
           </span>
-        </div>
+        </Link>
         <div className="flex items-center gap-1">
           <button
             onClick={() => upvote.mutate(post.id)}

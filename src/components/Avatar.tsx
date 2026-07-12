@@ -9,14 +9,30 @@ function initials(name: string): string {
 export function Avatar({
   name,
   color,
+  src,
   size = 40,
   className,
 }: {
   name: string;
   color: string;
+  src?: string | null;
   size?: number;
   className?: string;
 }) {
+  if (src) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return (
+      <img
+        src={src}
+        alt={name}
+        width={size}
+        height={size}
+        className={cn("shrink-0 object-cover", className)}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+
   return (
     <div
       className={cn(

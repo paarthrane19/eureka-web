@@ -13,17 +13,30 @@ export type Category = (typeof CATEGORIES)[number];
 
 export interface Author {
   id: string;
+  username: string;
   name: string;
   avatar_color: string;
+  avatar_url: string | null;
+  verified: boolean;
 }
 
 export interface User {
   id: string;
+  username: string;
   email: string;
   name: string;
   bio: string;
   interests: string[];
   avatar_color: string;
+  avatar_url: string | null;
+  cover_image: string | null;
+  link: string | null;
+  location: string | null;
+  working_at: string | null;
+  verified: boolean;
+  pinned_post_id: string | null;
+  post_count: number;
+  credibility_score: number;
   created_at: string;
 }
 
@@ -60,6 +73,8 @@ export interface Post {
   comment_count: number;
   upvoted: boolean;
   bookmarked: boolean;
+  images: string[];
+  pinned: boolean;
 }
 
 export interface Question {

@@ -89,6 +89,45 @@ async function request<T>(
   return data as T;
 }
 
+async function uploadImage(
+  file: File,
+  kind: "post" | "avatar" | "cover",
+): Promise<{ data_url: string }> {
+  const form = new FormData();
+  form.append("file", file);
+
+  const headers: Record<string, string> = {};
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  let response: Response;
+  try {
+    // No Content-Type header: the browser sets the multipart boundary itself.
+    response = await fetch(`${API_BASE_URL}/uploads/image?kind=${kind}`, {
+      method: "POST",
+      headers,
+      body: form,
+    });
+  } catch {
+    throw new ApiError("Could not reach the server while uploading.", 0);
+  }
+
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : undefined;
+  if (!response.ok) {
+    const detail =
+      (data && (data.detail || data.message)) ||
+      `Upload failed (${response.status}).`;
+    throw new ApiError(
+      Array.isArray(detail)
+        ? detail.map((d: { msg?: string }) => d.msg).join(", ")
+        : detail,
+      response.status,
+    );
+  }
+  return data as { data_url: string };
+}
+
 export const api = {
   // ---- Auth ----
   signup: (email: string, password: string, name: string) =>
@@ -108,11 +147,29 @@ export const api = {
   me: () => request<User>("/auth/me"),
 
   updateProfile: (
-    updates: Partial<Pick<User, "name" | "bio" | "interests">>,
+    updates: Partial<
+      Pick<
+        User,
+        | "name"
+        | "bio"
+        | "interests"
+        | "link"
+        | "location"
+        | "working_at"
+        | "avatar_url"
+        | "cover_image"
+      >
+    >,
   ) =>
     request<User>("/users/me", {
       method: "PATCH",
       body: JSON.stringify(updates),
+    }),
+
+  pinPost: (postId: string | null) =>
+    request<User>("/users/me/pin", {
+      method: "PUT",
+      body: JSON.stringify({ post_id: postId }),
     }),
 
   completeOnboarding: (interests: string[]) =>
@@ -120,6 +177,10 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ interests }),
     }),
+
+  // ---- Uploads ----
+  uploadImage: (file: File, kind: "post" | "avatar" | "cover" = "post") =>
+    uploadImage(file, kind),
 
   // ---- Posts ----
   getFeed: (params: { feed: FeedKind; category?: string; before?: string }) => {
@@ -137,6 +198,7 @@ export const api = {
     body: string;
     category: string;
     source_url?: string | null;
+    images?: string[];
   }) =>
     request<Post>("/posts", {
       method: "POST",
@@ -154,6 +216,9 @@ export const api = {
   getUserPosts: (userId: string) => request<Post[]>(`/users/${userId}/posts`),
 
   getUser: (userId: string) => request<User>(`/users/${userId}`),
+
+  getUserByUsername: (username: string) =>
+    request<User>(`/users/by-username/${encodeURIComponent(username)}`),
 
   // ---- Comments ----
   getComments: (postId: string) =>
