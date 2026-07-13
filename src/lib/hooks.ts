@@ -66,6 +66,20 @@ export function useUserPosts(userId?: string) {
   });
 }
 
+export function useTrending() {
+  return useQuery({
+    queryKey: ["trending"],
+    queryFn: () => api.getTrending(),
+  });
+}
+
+export function useDailyDiscovery() {
+  return useQuery({
+    queryKey: ["daily-discovery"],
+    queryFn: () => api.getDailyDiscovery(),
+  });
+}
+
 // ---- Comments ----
 export function useComments(postId: string) {
   return useQuery({

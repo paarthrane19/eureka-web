@@ -213,6 +213,10 @@ export const api = {
 
   getLibrary: () => request<Post[]>("/posts/library"),
 
+  getTrending: () => request<Post[]>("/posts/trending"),
+
+  getDailyDiscovery: () => request<Post | null>("/posts/daily-discovery"),
+
   getUserPosts: (userId: string) => request<Post[]>(`/users/${userId}/posts`),
 
   getUser: (userId: string) => request<User>(`/users/${userId}`),

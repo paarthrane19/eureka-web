@@ -1,15 +1,18 @@
 "use client";
 
-import { Check, Plus, Sparkles, Users } from "lucide-react";
+import { ArrowBigUp, Check, Flame, Plus, Sparkles, Users } from "lucide-react";
+import Link from "next/link";
 
+import { CategoryTag } from "@/components/CategoryTag";
 import { categoryColor } from "@/lib/colors";
 import {
   useCircles,
-  useDaily,
+  useDailyDiscovery,
   useFollowQuestion,
   useJoinCircle,
   useLeaveCircle,
   useQuestions,
+  useTrending,
 } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
@@ -29,81 +32,99 @@ export function RightSidebar() {
   );
 }
 
-// The Discover sections (daily discovery, follow questions, study circles).
-// Rendered in the desktop RightSidebar and, on mobile, on the /app/discover tab.
+// The Discover sections (daily discovery, follow questions, study circles,
+// trending). Rendered in the desktop RightSidebar and, on mobile, on the
+// /app/discover tab.
 export function RightSidebarContent() {
-  const daily = useDaily();
+  const daily = useDailyDiscovery();
   const questions = useQuestions();
   const circles = useCircles();
+  const trending = useTrending();
   const follow = useFollowQuestion();
   const join = useJoinCircle();
   const leave = useLeaveCircle();
 
   return (
     <>
-      {/* Daily discovery */}
+      {/* Daily discovery — the top post of the last 24 hours */}
       <section>
         <SectionTitle>Daily discovery</SectionTitle>
-        {daily.data ? (
-          <div className="bg-surfaceAlt hairline p-4">
-            <div className="mb-2 flex items-center gap-2">
-              <Sparkles size={14} className="text-accent" />
-              <span className="font-mono text-2xs uppercase tracking-wider text-accent">
-                {daily.data.category}
-              </span>
+        {daily.isLoading ? (
+          <div className="h-40 animate-pulse bg-surfaceAlt" />
+        ) : daily.data ? (
+          <Link
+            href={`/app/post/${daily.data.id}`}
+            className="group block hairline transition duration-fast hover:border-accent"
+          >
+            {daily.data.images?.[0] && (
+              <div className="aspect-[16/9] w-full overflow-hidden bg-surfaceAlt">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={daily.data.images[0]}
+                  alt=""
+                  className="h-full w-full object-cover transition duration-fast group-hover:scale-[1.02]"
+                />
+              </div>
+            )}
+            <div className="p-4">
+              <div className="mb-2 flex items-center gap-2">
+                <Sparkles size={13} className="shrink-0 text-accent" />
+                <CategoryTag category={daily.data.category} />
+              </div>
+              <p className="font-display text-[15px] font-bold leading-snug tracking-tight text-text">
+                {daily.data.headline}
+              </p>
+              <div className="mt-2 flex items-center gap-1 font-mono text-2xs tracking-wider text-faint">
+                <ArrowBigUp size={13} className="text-accent" />
+                {daily.data.upvotes} upvotes
+              </div>
             </div>
-            <p className="font-display text-[15px] font-bold leading-snug tracking-tight text-text">
-              {daily.data.title}
-            </p>
-            <p className="mt-1.5 font-sans text-[13px] leading-relaxed text-muted line-clamp-4">
-              {daily.data.body}
-            </p>
-          </div>
+          </Link>
         ) : (
-          <div className="h-24 animate-pulse bg-surfaceAlt" />
+          <p className="font-sans text-[13px] text-faint">
+            No standout discovery yet today.
+          </p>
         )}
       </section>
 
-      {/* Trending questions */}
+      {/* Follow questions — monospace pill badges */}
       <section>
         <SectionTitle>Follow questions</SectionTitle>
-        <div className="space-y-2">
-          {questions.data?.slice(0, 4).map((q) => (
-            <div
+        <div className="flex flex-wrap gap-2">
+          {questions.data?.map((q) => (
+            <button
               key={q.id}
-              className="flex items-start justify-between gap-3 hairline px-3 py-2.5"
+              onClick={() => follow.mutate(q.id)}
+              aria-pressed={q.following}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[11px] tracking-tight transition duration-fast",
+                q.following
+                  ? "border-accent bg-accent text-accentText"
+                  : "hairline text-muted hover:border-accent hover:text-text",
+              )}
             >
-              <span className="min-w-0">
-                <span className="flex items-center gap-1.5">
-                  <span
-                    style={{
-                      width: 5,
-                      height: 5,
-                      backgroundColor: categoryColor(q.category),
-                    }}
-                  />
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-faint">
-                    {q.follower_count} following
-                  </span>
-                </span>
-                <span className="mt-1 block font-sans text-[13px] leading-snug text-text">
-                  {q.text}
-                </span>
-              </span>
-              <button
-                onClick={() => follow.mutate(q.id)}
-                aria-label={q.following ? "Unfollow" : "Follow"}
-                className={cn(
-                  "flex h-6 w-6 shrink-0 items-center justify-center transition duration-fast",
-                  q.following
-                    ? "bg-accent text-accentText"
-                    : "hairline text-muted hover:border-accent",
-                )}
-              >
-                {q.following ? <Check size={12} /> : <Plus size={12} />}
-              </button>
-            </div>
+              <span
+                className="inline-block shrink-0 rounded-full"
+                style={{
+                  width: 6,
+                  height: 6,
+                  backgroundColor: q.following
+                    ? "currentColor"
+                    : categoryColor(q.category),
+                }}
+              />
+              {q.text}
+              {q.following ? (
+                <Check size={12} className="shrink-0" />
+              ) : (
+                <Plus size={12} className="shrink-0" />
+              )}
+            </button>
           ))}
+          {questions.isLoading &&
+            Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="h-7 w-40 animate-pulse rounded-full bg-surfaceAlt" />
+            ))}
         </div>
       </section>
 
@@ -111,19 +132,19 @@ export function RightSidebarContent() {
       <section>
         <SectionTitle>Study circles</SectionTitle>
         <div className="space-y-2">
-          {circles.data?.slice(0, 3).map((c) => (
+          {circles.data?.map((c) => (
             <div key={c.id} className="hairline px-3 py-2.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="flex items-center gap-1.5 font-sans text-[13px] font-medium text-text">
-                  <Users size={13} className="text-muted" />
-                  {c.name}
+                <span className="flex min-w-0 items-center gap-1.5 font-sans text-[13px] font-medium text-text">
+                  <Users size={13} className="shrink-0 text-muted" />
+                  <span className="truncate">{c.name}</span>
                 </span>
                 <button
                   onClick={() =>
                     c.joined ? leave.mutate(c.id) : join.mutate(c.id)
                   }
                   className={cn(
-                    "h-6 px-2 font-mono text-[10px] uppercase tracking-wider transition duration-fast",
+                    "h-6 shrink-0 px-2 font-mono text-[10px] uppercase tracking-wider transition duration-fast",
                     c.joined
                       ? "bg-accent text-accentText"
                       : "hairline text-muted hover:border-accent",
@@ -133,10 +154,45 @@ export function RightSidebarContent() {
                 </button>
               </div>
               <p className="mt-1 font-mono text-2xs tracking-wider text-faint">
-                {c.member_count}/{c.capacity} members
+                {c.member_count} members
               </p>
             </div>
           ))}
+          {circles.isLoading &&
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-14 animate-pulse bg-surfaceAlt" />
+            ))}
+        </div>
+      </section>
+
+      {/* Trending — top posts of the last 7 days */}
+      <section>
+        <SectionTitle>Trending</SectionTitle>
+        <div className="space-y-1">
+          {trending.data?.map((p, i) => (
+            <Link
+              key={p.id}
+              href={`/app/post/${p.id}`}
+              className="group flex items-start gap-3 px-1 py-2 transition duration-fast"
+            >
+              <span className="font-mono text-sm font-bold tabular-nums text-faint">
+                {i + 1}
+              </span>
+              <span className="min-w-0">
+                <span className="block font-sans text-[13px] leading-snug text-text line-clamp-2 group-hover:text-accent">
+                  {p.headline}
+                </span>
+                <span className="mt-1 flex items-center gap-1 font-mono text-2xs tracking-wider text-faint">
+                  <Flame size={11} className="text-accent" />
+                  {p.upvotes} upvotes
+                </span>
+              </span>
+            </Link>
+          ))}
+          {trending.isLoading &&
+            Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-10 animate-pulse bg-surfaceAlt" />
+            ))}
         </div>
       </section>
     </>
