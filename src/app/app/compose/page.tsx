@@ -41,10 +41,10 @@ export default function ComposePage() {
 
   return (
     <div>
-      <header className="sticky top-0 z-30 flex items-center gap-3 bg-bg/80 hairline-b px-6 py-4 backdrop-blur-md">
+      <header className="sticky top-0 z-30 flex items-center gap-3 bg-bg/80 hairline-b px-4 py-4 backdrop-blur-md md:px-6">
         <Link
           href="/app"
-          className="flex h-8 w-8 items-center justify-center hairline transition duration-fast hover:border-accent"
+          className="flex h-9 w-9 items-center justify-center hairline transition duration-fast hover:border-accent md:h-8 md:w-8"
         >
           <ArrowLeft size={16} />
         </Link>
@@ -58,7 +58,7 @@ export default function ComposePage() {
           e.preventDefault();
           if (valid) create.mutate();
         }}
-        className="px-6 py-8"
+        className="px-4 py-6 md:px-6 md:py-8"
       >
         <label className="mb-5 block">
           <span className="mb-1.5 block font-mono text-2xs uppercase tracking-widest text-faint">
@@ -96,7 +96,7 @@ export default function ComposePage() {
                 type="button"
                 onClick={() => setCategory(c)}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 font-mono text-2xs uppercase tracking-wider transition duration-fast",
+                  "flex items-center gap-1.5 px-3 py-2 font-mono text-2xs uppercase tracking-wider transition duration-fast md:py-1.5",
                   category === c
                     ? "bg-accent text-accentText"
                     : "hairline text-muted hover:border-accent",
@@ -141,7 +141,7 @@ export default function ComposePage() {
         <button
           type="submit"
           disabled={!valid || create.isPending}
-          className="inline-flex h-[48px] items-center bg-accent px-6 font-mono text-sm font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105 disabled:opacity-50"
+          className="flex h-[48px] w-full items-center justify-center bg-accent px-6 font-mono text-sm font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105 disabled:opacity-50 sm:inline-flex sm:w-auto sm:justify-start"
         >
           {create.isPending ? "Publishing…" : "Publish discovery"}
         </button>

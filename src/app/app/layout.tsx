@@ -3,7 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import { BottomNav } from "@/components/app/BottomNav";
 import { LeftSidebar } from "@/components/app/LeftSidebar";
+import { MobileTopBar } from "@/components/app/MobileTopBar";
 import { RightSidebar } from "@/components/app/RightSidebar";
 import { useAuth } from "@/lib/auth";
 
@@ -26,8 +28,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-[1320px] bg-bg text-text">
       <LeftSidebar />
-      <main className="min-w-0 flex-1 hairline-r">{children}</main>
+      <div className="flex min-w-0 flex-1 flex-col hairline-r">
+        <MobileTopBar />
+        <main className="min-w-0 flex-1 pb-16 md:pb-0">{children}</main>
+      </div>
       <RightSidebar />
+      <BottomNav />
     </div>
   );
 }

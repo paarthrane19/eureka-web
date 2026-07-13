@@ -73,11 +73,11 @@ export default function FeedPage() {
     <div>
       {/* Sticky header */}
       <header className="sticky top-0 z-30 bg-bg/80 hairline-b backdrop-blur-md">
-        <div className="flex items-center justify-between px-6 pt-5">
+        <div className="flex items-center justify-between px-4 pt-5 md:px-6">
           <h1 className="font-display text-2xl font-bold tracking-tight">
             Feed
           </h1>
-          <div className="flex items-center gap-3 font-mono text-2xs uppercase tracking-widest text-faint">
+          <div className="hidden items-center gap-3 font-mono text-2xs uppercase tracking-widest text-faint md:flex">
             <kbd className="hairline px-1.5 py-0.5">J</kbd>
             <kbd className="hairline px-1.5 py-0.5">K</kbd>
             <span>navigate ·</span>
@@ -88,7 +88,7 @@ export default function FeedPage() {
         </div>
 
         {/* Feed kind */}
-        <div className="mt-4 flex gap-6 px-6">
+        <div className="mt-4 flex gap-6 px-4 md:px-6">
           {(["for-you", "all"] as FeedKind[]).map((k) => (
             <button
               key={k}
@@ -110,13 +110,13 @@ export default function FeedPage() {
       </header>
 
       {/* Category chips */}
-      <div className="flex gap-2 overflow-x-auto scroll-thin px-6 py-4 hairline-b">
+      <div className="flex gap-2 overflow-x-auto scroll-thin px-4 py-3 hairline-b md:px-6 md:py-4">
         {FILTERS.map((c) => (
           <button
             key={c}
             onClick={() => setCategory(c)}
             className={cn(
-              "shrink-0 px-3 py-1.5 font-mono text-2xs uppercase tracking-wider transition duration-fast",
+              "flex shrink-0 items-center px-3 py-2 font-mono text-2xs uppercase tracking-wider transition duration-fast md:py-1.5",
               category === c
                 ? "bg-accent text-accentText"
                 : "hairline text-muted hover:border-accent",
@@ -131,7 +131,7 @@ export default function FeedPage() {
       {isLoading && (
         <div className="space-y-0">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="hairline-b px-6 py-6">
+            <div key={i} className="hairline-b px-4 py-5 md:px-6 md:py-6">
               <div className="h-40 animate-pulse bg-surfaceAlt" />
             </div>
           ))}
@@ -139,13 +139,13 @@ export default function FeedPage() {
       )}
 
       {isError && (
-        <div className="px-6 py-16 text-center font-mono text-sm text-muted">
+        <div className="px-4 py-16 text-center font-mono text-sm text-muted md:px-6">
           Could not load the feed. Is the API running?
         </div>
       )}
 
       {posts && posts.length === 0 && (
-        <div className="px-6 py-16 text-center font-mono text-sm text-muted">
+        <div className="px-4 py-16 text-center font-mono text-sm text-muted md:px-6">
           Nothing here yet. Be the first to post.
         </div>
       )}

@@ -13,16 +13,16 @@ export default function ExplorePage() {
 
   return (
     <div>
-      <header className="sticky top-0 z-30 bg-bg/80 hairline-b px-6 py-5 backdrop-blur-md">
+      <header className="sticky top-0 z-30 bg-bg/80 hairline-b px-4 py-5 backdrop-blur-md md:px-6">
         <h1 className="font-display text-2xl font-bold tracking-tight">
           Explore
         </h1>
       </header>
 
-      <div className="px-6 py-8">
+      <div className="px-4 py-6 md:px-6 md:py-8">
         {/* Daily discovery hero */}
         {daily.data && (
-          <section className="mb-10 hairline bg-surfaceAlt p-6">
+          <section className="mb-10 hairline bg-surfaceAlt p-5 md:p-6">
             <div className="mb-3 flex items-center gap-2">
               <Sparkles size={15} className="text-accent" />
               <span className="font-mono text-2xs uppercase tracking-widest text-accent">

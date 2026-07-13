@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Hash, Send } from "lucide-react";
+import { ArrowLeft, Hash, Send } from "lucide-react";
 import { useState } from "react";
 
 import { Avatar } from "@/components/Avatar";
@@ -12,7 +12,7 @@ import { relativeTime } from "@/lib/time";
 import type { ChatRoom } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-function Thread({ room }: { room: ChatRoom }) {
+function Thread({ room, onBack }: { room: ChatRoom; onBack?: () => void }) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [draft, setDraft] = useState("");
@@ -36,8 +36,17 @@ function Thread({ room }: { room: ChatRoom }) {
   };
 
   return (
-    <div className="flex h-screen flex-col">
-      <header className="sticky top-0 z-30 flex items-center gap-2 bg-bg/80 hairline-b px-6 py-4 backdrop-blur-md">
+    <div className="flex h-[calc(100dvh-7rem)] flex-col md:h-screen">
+      <header className="sticky top-0 z-30 flex items-center gap-2 bg-bg/80 hairline-b px-4 py-4 backdrop-blur-md md:px-6">
+        {onBack && (
+          <button
+            onClick={onBack}
+            aria-label="Back to rooms"
+            className="-ml-1 flex h-9 w-9 items-center justify-center text-muted transition duration-fast hover:text-text md:hidden"
+          >
+            <ArrowLeft size={18} />
+          </button>
+        )}
         <Hash size={16} className="text-accent" />
         <span className="font-display text-lg font-bold tracking-tight">
           {room.name}
@@ -47,7 +56,7 @@ function Thread({ room }: { room: ChatRoom }) {
         </span>
       </header>
 
-      <div className="flex flex-1 flex-col-reverse gap-4 overflow-y-auto scroll-thin px-6 py-6">
+      <div className="flex flex-1 flex-col-reverse gap-4 overflow-y-auto scroll-thin px-4 py-6 md:px-6">
         {messages.data
           ?.slice()
           .reverse()
@@ -98,7 +107,7 @@ function Thread({ room }: { room: ChatRoom }) {
         )}
       </div>
 
-      <form onSubmit={submit} className="flex gap-2 hairline-t px-6 py-4">
+      <form onSubmit={submit} className="flex gap-2 hairline-t px-4 py-4 md:px-6">
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
@@ -125,9 +134,14 @@ export default function ChatPage() {
 
   return (
     <div className="flex">
-      {/* Room list */}
-      <div className="w-[260px] shrink-0 hairline-r">
-        <header className="sticky top-0 z-30 bg-bg/80 hairline-b px-5 py-5 backdrop-blur-md">
+      {/* Room list — full width on mobile, hidden once a room is open */}
+      <div
+        className={cn(
+          "w-full shrink-0 md:w-[260px] md:hairline-r",
+          selected ? "hidden md:block" : "block",
+        )}
+      >
+        <header className="sticky top-0 z-30 bg-bg/80 hairline-b px-4 py-5 backdrop-blur-md md:px-5">
           <h1 className="font-display text-xl font-bold tracking-tight">
             Rooms
           </h1>
@@ -173,12 +187,21 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Thread */}
-      <div className="min-w-0 flex-1">
+      {/* Thread — full screen on mobile once a room is selected */}
+      <div
+        className={cn(
+          "min-w-0 flex-1",
+          selected ? "block" : "hidden md:block",
+        )}
+      >
         {active ? (
-          <Thread key={active.id} room={active} />
+          <Thread
+            key={active.id}
+            room={active}
+            onBack={() => setSelected(null)}
+          />
         ) : (
-          <div className="flex h-screen items-center justify-center font-mono text-sm text-faint">
+          <div className="flex h-[calc(100dvh-7rem)] items-center justify-center font-mono text-sm text-faint md:h-screen">
             {rooms.isError ? "Could not load rooms." : "Select a room"}
           </div>
         )}

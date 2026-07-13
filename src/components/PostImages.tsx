@@ -43,8 +43,10 @@ export function PostImages({
               src={src}
               alt=""
               className={cn(
-                "w-full object-cover transition duration-medium group-hover:brightness-95",
-                images.length === 2 ? "aspect-square" : "max-h-[420px]",
+                "block w-full object-cover transition duration-medium group-hover:brightness-95",
+                images.length === 2
+                  ? "aspect-square"
+                  : "max-h-[70vh] md:max-h-[420px]",
               )}
             />
           </button>

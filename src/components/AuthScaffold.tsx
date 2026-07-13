@@ -30,7 +30,7 @@ export function AuthScaffold({
       </header>
 
       <main className="flex flex-1 items-center justify-center px-5 py-16">
-        <div className="w-full max-w-sm bg-surface/80 hairline p-8 backdrop-blur-sm">
+        <div className="w-full max-w-sm bg-surface/80 hairline p-6 backdrop-blur-sm sm:p-8">
           <div className="mb-6">
             <ScanLine className="mb-5 w-14" height={2} />
             <h1 className="font-display text-2xl font-bold tracking-tight">

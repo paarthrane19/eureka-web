@@ -42,7 +42,7 @@ export function PostCard({
     <article
       onMouseEnter={onActivate}
       className={cn(
-        "relative px-6 py-6 hairline-b transition-colors duration-fast",
+        "relative px-4 py-5 hairline-b transition-colors duration-fast md:px-6 md:py-6",
         active ? "bg-surfaceAlt" : "bg-surface",
       )}
     >
@@ -60,7 +60,7 @@ export function PostCard({
       </div>
 
       <Link href={`/app/post/${post.id}`}>
-        <h2 className="font-display text-2xl font-bold leading-tight tracking-tight hover:text-accent">
+        <h2 className="font-display text-xl font-bold leading-tight tracking-tight hover:text-accent md:text-2xl">
           {post.headline}
         </h2>
       </Link>
@@ -85,7 +85,7 @@ export function PostCard({
             aria-label="Previous level"
             disabled={!canPrev}
             onClick={() => canPrev && onLevelChange(clamped - 1)}
-            className="flex h-8 w-8 items-center justify-center hairline transition duration-fast enabled:hover:border-accent disabled:opacity-30"
+            className="flex h-9 w-9 items-center justify-center hairline transition duration-fast enabled:hover:border-accent disabled:opacity-30 md:h-8 md:w-8"
           >
             <ChevronLeft size={16} />
           </button>
@@ -96,7 +96,7 @@ export function PostCard({
             aria-label="Deeper level"
             disabled={!canNext}
             onClick={() => canNext && onLevelChange(clamped + 1)}
-            className="flex h-8 w-8 items-center justify-center hairline transition duration-fast enabled:hover:border-accent disabled:opacity-30"
+            className="flex h-9 w-9 items-center justify-center hairline transition duration-fast enabled:hover:border-accent disabled:opacity-30 md:h-8 md:w-8"
           >
             <ChevronRight size={16} />
           </button>

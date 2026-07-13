@@ -117,7 +117,7 @@ export function ProfileScreen({
 
   return (
     <div>
-      <header className="sticky top-0 z-30 flex items-center gap-2 bg-bg/80 hairline-b px-6 py-5 backdrop-blur-md">
+      <header className="sticky top-0 z-30 flex items-center gap-2 bg-bg/80 hairline-b px-4 py-5 backdrop-blur-md md:px-6">
         <h1 className="flex items-center gap-1.5 font-display text-2xl font-bold tracking-tight">
           {isMe ? "Profile" : user.name}
           {!isMe && user.verified && <VerifiedBadge size={18} />}
@@ -147,7 +147,7 @@ export function ProfileScreen({
       </div>
 
       {/* Identity */}
-      <div className="px-6 pb-6 hairline-b">
+      <div className="px-4 pb-6 hairline-b md:px-6">
         <div className="-mt-10 flex items-end justify-between">
           <div className="relative">
             <Avatar
@@ -198,7 +198,7 @@ export function ProfileScreen({
                 className="w-full resize-none hairline bg-surface p-3 font-sans text-[15px] text-text outline-none placeholder:text-faint focus:border-accent"
               />
             </EditField>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <EditField label="Location">
                 <input
                   value={location}
@@ -335,7 +335,7 @@ export function ProfileScreen({
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 px-6 pt-4 hairline-b">
+      <div className="flex gap-6 px-4 pt-4 hairline-b md:px-6">
         <button
           onClick={() => setTab("posts")}
           className={cn(
@@ -371,7 +371,7 @@ export function ProfileScreen({
                 onClick={() => pin.mutate(post.pinned ? null : post.id)}
                 disabled={pin.isPending}
                 className={cn(
-                  "absolute right-6 top-6 z-10 flex items-center gap-1 px-2 py-1 font-mono text-[10px] uppercase tracking-wider transition disabled:opacity-50",
+                  "absolute right-4 top-5 z-10 flex items-center gap-1 px-2 py-1 font-mono text-[10px] uppercase tracking-wider transition disabled:opacity-50 md:right-6 md:top-6",
                   post.pinned
                     ? "text-accent"
                     : "text-faint hover:text-accent",
@@ -393,14 +393,14 @@ export function ProfileScreen({
           </div>
         ))}
         {list?.length === 0 && (
-          <p className="px-6 py-16 text-center font-mono text-2xs uppercase tracking-wider text-faint">
+          <p className="px-4 py-16 text-center font-mono text-2xs uppercase tracking-wider text-faint md:px-6">
             {tab === "posts" ? "No discoveries yet." : "Nothing saved yet."}
           </p>
         )}
       </div>
 
       {!isMe && (
-        <div className="px-6 py-8 text-center">
+        <div className="px-4 py-8 text-center md:px-6">
           <Link
             href="/app"
             className="font-mono text-2xs uppercase tracking-wider text-faint transition hover:text-accent"

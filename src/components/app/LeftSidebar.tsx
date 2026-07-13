@@ -34,7 +34,7 @@ export function LeftSidebar() {
   const { isDark, toggle } = useTheme();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-[240px] shrink-0 flex-col hairline-r px-4 py-6">
+    <aside className="sticky top-0 hidden h-screen w-[240px] shrink-0 flex-col hairline-r px-4 py-6 md:flex">
       <Link href="/app" className="mb-8 flex items-center px-2">
         <Logo className="h-9 w-auto" priority />
       </Link>

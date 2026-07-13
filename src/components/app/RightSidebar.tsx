@@ -22,6 +22,16 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 }
 
 export function RightSidebar() {
+  return (
+    <aside className="sticky top-0 hidden h-screen w-[320px] shrink-0 flex-col gap-8 overflow-y-auto scroll-thin hairline-l px-5 py-6 xl:flex">
+      <RightSidebarContent />
+    </aside>
+  );
+}
+
+// The Discover sections (daily discovery, follow questions, study circles).
+// Rendered in the desktop RightSidebar and, on mobile, on the /app/discover tab.
+export function RightSidebarContent() {
   const daily = useDaily();
   const questions = useQuestions();
   const circles = useCircles();
@@ -30,7 +40,7 @@ export function RightSidebar() {
   const leave = useLeaveCircle();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-[320px] shrink-0 flex-col gap-8 overflow-y-auto scroll-thin hairline-l px-5 py-6 xl:flex">
+    <>
       {/* Daily discovery */}
       <section>
         <SectionTitle>Daily discovery</SectionTitle>
@@ -129,6 +139,6 @@ export function RightSidebar() {
           ))}
         </div>
       </section>
-    </aside>
+    </>
   );
 }

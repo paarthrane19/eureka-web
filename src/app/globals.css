@@ -38,6 +38,9 @@
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Guard against accidental horizontal scroll on small screens. `clip` (unlike
+     `hidden`) doesn't create a scroll container, so sticky headers keep working. */
+  overflow-x: clip;
 }
 
 body {
