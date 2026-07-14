@@ -3,6 +3,7 @@
 import { Bookmark, ChevronLeft, ChevronRight, MessageSquare, ChevronUp, Pin } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 import { useBookmark, useUpvote } from "@/lib/hooks";
 import { relativeTime } from "@/lib/time";
@@ -38,6 +39,11 @@ export function PostCard({
   const canPrev = clamped > 0;
   const canNext = clamped < levels.length - 1;
 
+  // Direction of the last level change, so the content slides in the right way.
+  const prevLevel = useRef(clamped);
+  const goingDeeper = clamped >= prevLevel.current;
+  prevLevel.current = clamped;
+
   return (
     <article
       onMouseEnter={onActivate}
@@ -66,7 +72,13 @@ export function PostCard({
       </Link>
 
       <div className="mt-3 min-h-[4.5rem]">
-        <p className="font-sans text-[15px] leading-relaxed text-muted">
+        <p
+          key={clamped}
+          className={cn(
+            "font-sans text-[15px] leading-relaxed text-muted",
+            goingDeeper ? "animate-depth-next" : "animate-depth-prev",
+          )}
+        >
           {levels[clamped]}
         </p>
       </div>

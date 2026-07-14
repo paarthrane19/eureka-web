@@ -3,16 +3,19 @@
 import {
   ArrowLeft,
   Bookmark,
+  ChevronLeft,
+  ChevronRight,
   ChevronUp,
   MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Avatar } from "@/components/Avatar";
 import { CategoryTag } from "@/components/CategoryTag";
 import { CredibilityArc } from "@/components/CredibilityIndicator";
 import { DepthDots, LEVEL_LABELS } from "@/components/DepthDots";
+import { PostImages } from "@/components/PostImages";
 import { SourceBadge } from "@/components/SourceBadge";
 import {
   useAddComment,
@@ -38,6 +41,27 @@ export default function PostDetailPage({
 
   const [level, setLevel] = useState(0);
   const [draft, setDraft] = useState("");
+  const prevLevel = useRef(0);
+
+  const levelCount = post?.levels?.length || 1;
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const el = document.activeElement;
+      if (
+        el instanceof HTMLInputElement ||
+        el instanceof HTMLTextAreaElement ||
+        (el as HTMLElement)?.isContentEditable
+      )
+        return;
+      if (e.key === "ArrowRight") {
+        setLevel((l) => Math.min(levelCount - 1, l + 1));
+      } else if (e.key === "ArrowLeft") {
+        setLevel((l) => Math.max(0, l - 1));
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [levelCount]);
 
   if (isLoading || !post) {
     return (
@@ -49,6 +73,10 @@ export default function PostDetailPage({
 
   const levels = post.levels?.length ? post.levels : [post.body];
   const clamped = Math.min(level, levels.length - 1);
+  const goingDeeper = clamped >= prevLevel.current;
+  prevLevel.current = clamped;
+  const canPrev = clamped > 0;
+  const canNext = clamped < levels.length - 1;
   const sources = post.credibility?.sources ?? [];
 
   const submit = (e: React.FormEvent) => {
@@ -94,9 +122,21 @@ export default function PostDetailPage({
           </span>
         </div>
 
+        {post.images?.length > 0 && (
+          <div className="mt-6">
+            <PostImages images={post.images} />
+          </div>
+        )}
+
         {/* Depth body */}
         <div className="mt-6 min-h-[6rem]">
-          <p className="font-sans text-lg leading-relaxed text-text">
+          <p
+            key={clamped}
+            className={cn(
+              "font-sans text-lg leading-relaxed text-text",
+              goingDeeper ? "animate-depth-next" : "animate-depth-prev",
+            )}
+          >
             {levels[clamped]}
           </p>
         </div>
@@ -107,9 +147,27 @@ export default function PostDetailPage({
             active={clamped}
             onSelect={setLevel}
           />
-          <span className="font-mono text-2xs uppercase tracking-widest text-faint">
-            {LEVEL_LABELS[clamped]}
-          </span>
+          <div className="flex items-center gap-1">
+            <button
+              aria-label="Previous level"
+              disabled={!canPrev}
+              onClick={() => canPrev && setLevel(clamped - 1)}
+              className="flex h-8 w-8 items-center justify-center hairline transition duration-fast enabled:hover:border-accent disabled:opacity-30"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className="w-24 text-center font-mono text-2xs uppercase tracking-widest text-faint">
+              {LEVEL_LABELS[clamped]}
+            </span>
+            <button
+              aria-label="Deeper level"
+              disabled={!canNext}
+              onClick={() => canNext && setLevel(clamped + 1)}
+              className="flex h-8 w-8 items-center justify-center hairline transition duration-fast enabled:hover:border-accent disabled:opacity-30"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
 
         {/* Credibility */}

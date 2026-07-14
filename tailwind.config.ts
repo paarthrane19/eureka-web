@@ -52,10 +52,20 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "depth-next": {
+          "0%": { opacity: "0", transform: "translateX(10px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "depth-prev": {
+          "0%": { opacity: "0", transform: "translateX(-10px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
       },
       animation: {
         scan: "scan 2.2s linear infinite",
         "fade-up": "fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "depth-next": "depth-next 150ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "depth-prev": "depth-prev 150ms cubic-bezier(0.16, 1, 0.3, 1) both",
       },
     },
   },
