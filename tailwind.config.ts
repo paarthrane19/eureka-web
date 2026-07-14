@@ -2,8 +2,8 @@ import type { Config } from "tailwindcss";
 
 /**
  * Laboratory Minimal — the exact design system shared with the Eureka mobile app.
- * Colors resolve to CSS variables so the OLED dark mode swaps under `.dark`
- * (see globals.css). The single accent is acid green #00E676.
+ * Colors resolve to CSS variables so warm dark mode swaps under `.dark`
+ * (see globals.css). The accent is a warm sage green.
  */
 const config: Config = {
   darkMode: "class",
@@ -21,7 +21,16 @@ const config: Config = {
         accent: "var(--accent)",
         accentText: "var(--accent-text)",
         accentSoft: "var(--accent-soft)",
+        accentInk: "var(--accent-ink)",
         heart: "var(--heart)",
+        green: {
+          50: "var(--green-50)",
+          100: "var(--green-100)",
+          300: "var(--green-300)",
+          400: "var(--green-400)",
+          500: "var(--green-500)",
+          700: "var(--green-700)",
+        },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

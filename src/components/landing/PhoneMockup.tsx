@@ -76,7 +76,7 @@ function MiniCard({ item }: { item: (typeof FEED)[number] }) {
         <span className="w-6 bg-border" style={{ height: 3 }} />
         <span className="w-6 bg-border" style={{ height: 3 }} />
         <span className="ml-2 font-mono text-[9px] tracking-wider text-faint">
-          <span className="text-accent">{item.verified} VERIFIED</span> · {item.t}
+          <span className="text-accentInk">{item.verified} VERIFIED</span> · {item.t}
         </span>
       </div>
     </div>

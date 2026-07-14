@@ -1,7 +1,8 @@
+// Warm sage accent scale — mirrors the green-* tokens in globals.css.
 export const palette = {
-  acid: "#00E676",
-  acidDim: "#00C853",
-  acidGlow: "#5CFFA8",
+  acid: "#7FA96D", // green-500 — primary accent
+  acidDim: "#5C7F4E", // green-700 — green text on light bg
+  acidGlow: "#96BE85", // green-400 — accent in dark mode
 };
 
 // Restrained category hues for the small dot/tag accents — mostly monochrome.

@@ -25,7 +25,7 @@ export default function ExplorePage() {
           <section className="mb-10 hairline bg-surfaceAlt p-5 md:p-6">
             <div className="mb-3 flex items-center gap-2">
               <Sparkles size={15} className="text-accent" />
-              <span className="font-mono text-2xs uppercase tracking-widest text-accent">
+              <span className="font-mono text-2xs uppercase tracking-widest text-accentInk">
                 Today&apos;s discovery · {daily.data.category}
               </span>
             </div>

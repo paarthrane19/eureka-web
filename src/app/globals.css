@@ -3,31 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --bg: #ffffff;
+  /* Shared green scale — warm sage. Same values in light and dark; the
+     semantic tokens below pick the right step per mode. */
+  --green-50: #eff5ec;
+  --green-100: #dce9d5;
+  --green-300: #a9c79b;
+  --green-400: #96be85;
+  --green-500: #7fa96d;
+  --green-700: #5c7f4e;
+
+  /* Light mode — Anthropic cream, warm ink, sage accent. */
+  --bg: #faf9f5;
   --surface: #ffffff;
-  --surface-alt: #fafbfc;
-  --border: #e5e5e5;
-  --text: #000000;
-  --muted: #666666;
-  --faint: #9b9b9b;
-  --accent: #00e676;
-  --accent-text: #000000;
-  --accent-soft: #e4fff1;
+  --surface-alt: #f0eee6;
+  --border: #e5e2d9;
+  --text: #1f1e1d;
+  --muted: #6b6963;
+  --faint: #9a968c;
+  --accent: var(--green-500);
+  --accent-text: #faf9f5;
+  --accent-ink: var(--green-700);
+  --accent-soft: var(--green-50);
   --heart: #ff3b30;
   --hairline: 0.5px;
 }
 
 .dark {
-  --bg: #000000;
-  --surface: #000000;
-  --surface-alt: #0c0c0c;
-  --border: #1e1e1e;
-  --text: #ffffff;
-  --muted: #a1a1a1;
-  --faint: #5c5c5c;
-  --accent: #00e676;
-  --accent-text: #000000;
-  --accent-soft: #052617;
+  /* Dark mode — lifted warm charcoal, cream text, brighter sage accent. */
+  --bg: #262624;
+  --surface: #30302e;
+  --surface-alt: #1f1e1d;
+  --border: #3d3d3a;
+  --text: #f5f4ef;
+  --muted: #a3a099;
+  --faint: #6e6b64;
+  --accent: var(--green-400);
+  --accent-text: #1f1e1d;
+  --accent-ink: var(--green-400);
+  --accent-soft: #33402b;
   --heart: #ff453a;
 }
 

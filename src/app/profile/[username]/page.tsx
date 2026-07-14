@@ -44,7 +44,7 @@ export default function PublicProfilePage() {
         </p>
         <Link
           href="/app"
-          className="mt-4 inline-block font-mono text-2xs uppercase tracking-wider text-accent hover:underline"
+          className="mt-4 inline-block font-mono text-2xs uppercase tracking-wider text-accentInk hover:underline"
         >
           ← Back to Eureka
         </Link>

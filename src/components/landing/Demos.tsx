@@ -100,7 +100,7 @@ export function VerifiedDemo() {
           </p>
           <div className="mt-2 flex items-center gap-2">
             <Check size={13} className="text-accent" />
-            <span className="font-mono text-2xs uppercase tracking-wider text-accent">
+            <span className="font-mono text-2xs uppercase tracking-wider text-accentInk">
               664 verified
             </span>
           </div>

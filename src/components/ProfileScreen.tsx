@@ -304,7 +304,7 @@ export function ProfileScreen({
                   href={normalizeLink(user.link)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-accent transition hover:underline"
+                  className="flex items-center gap-1.5 text-accentInk transition hover:underline"
                 >
                   <LinkIcon size={12} /> {user.link.replace(/^https?:\/\//, "")}
                 </a>

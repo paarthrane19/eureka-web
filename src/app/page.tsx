@@ -141,7 +141,7 @@ export default function LandingPage() {
                 <span className="font-mono text-2xs uppercase tracking-wider text-faint">
                   {count !== null ? (
                     <>
-                      <span className="text-accent">
+                      <span className="text-accentInk">
                         <AnimatedCounter value={count} />
                       </span>{" "}
                       curious minds already in
@@ -212,7 +212,7 @@ export default function LandingPage() {
           >
             <Reveal>
               <div>
-                <span className="font-mono text-2xs uppercase tracking-widest text-accent">
+                <span className="font-mono text-2xs uppercase tracking-widest text-accentInk">
                   {d.tag}
                 </span>
                 <div className="mt-5 flex items-center gap-3">

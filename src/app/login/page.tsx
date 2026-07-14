@@ -37,7 +37,7 @@ export default function LoginPage() {
       footer={
         <>
           New here?{" "}
-          <Link href="/signup" className="text-accent hover:brightness-110">
+          <Link href="/signup" className="text-accentInk hover:brightness-110">
             Create an account
           </Link>
         </>

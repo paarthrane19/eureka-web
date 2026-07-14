@@ -34,7 +34,7 @@ export function GridBackground({ className }: { className?: string }) {
         className="absolute inset-x-0 h-[40vh]"
         style={{
           background:
-            "linear-gradient(180deg, transparent, rgba(0,230,118,0.06), transparent)",
+            "linear-gradient(180deg, transparent, rgba(127,169,109,0.08), transparent)",
         }}
         initial={{ y: "-40vh" }}
         animate={{ y: "140vh" }}

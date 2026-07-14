@@ -1,16 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Inter_Tight, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
 import { Providers } from "./providers";
 
-const inter = Inter({
+// Inter Tight — the closest free match to Claude's Styrene geometric grotesque.
+// Used for both body and display so the whole app shares one typeface.
+const interTight = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const interTightDisplay = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
@@ -69,8 +71,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#faf9f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#262624" },
   ],
 };
 
@@ -83,7 +85,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${interTight.variable} ${interTightDisplay.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         {/* Set theme before paint to avoid a flash of the wrong mode. */}

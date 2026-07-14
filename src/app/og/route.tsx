@@ -19,7 +19,7 @@ export function GET() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#000000",
+          background: "#262624",
           padding: "72px",
           fontFamily: "sans-serif",
         }}
@@ -29,7 +29,7 @@ export function GET() {
           <img src={logo} height={96} alt="Eureka" />
           <span
             style={{
-              color: "#5C5C5C",
+              color: "#A3A099",
               fontSize: 20,
               letterSpacing: 4,
             }}
@@ -41,7 +41,7 @@ export function GET() {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <span
             style={{
-              color: "#fff",
+              color: "#f5f4ef",
               fontSize: 76,
               fontWeight: 700,
               lineHeight: 1.02,
@@ -52,7 +52,7 @@ export function GET() {
           </span>
           <span
             style={{
-              color: "#00E676",
+              color: "#96be85",
               fontSize: 76,
               fontWeight: 700,
               lineHeight: 1.02,
@@ -63,7 +63,7 @@ export function GET() {
           </span>
         </div>
 
-        <span style={{ color: "#A1A1A1", fontSize: 26, maxWidth: 900 }}>
+        <span style={{ color: "#a3a099", fontSize: 26, maxWidth: 900 }}>
           The social platform for science — where discoveries are verified and
           curiosity is the currency.
         </span>
