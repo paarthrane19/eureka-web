@@ -9,6 +9,20 @@ import {
 import { api } from "./api";
 import type { FeedKind, Post, Question, StudyCircle } from "./types";
 
+/**
+ * Real-time strategy: short-interval polling, not WebSockets.
+ *
+ * The API does expose `/chat/ws/room/{id}`, but its ConnectionManager keeps
+ * subscribers in a per-process dict. That only works with a single worker —
+ * as soon as Railway runs more than one replica, a socket connected to
+ * replica A never sees a message broadcast on replica B, and the failure is
+ * silent. Polling is stateless, survives replica restarts and idle-connection
+ * timeouts, and needs no reconnect/backoff logic. At this scale the extra
+ * request volume is negligible, and it degrades gracefully instead of
+ * appearing to work while silently dropping messages.
+ */
+const POLL_INTERVAL_MS = 5000;
+
 // ---- Posts / feed ----
 export function useFeed(feed: FeedKind, category: string) {
   return useQuery({
@@ -112,6 +126,14 @@ export function useCollections() {
   });
 }
 
+export function useCollection(id: string) {
+  return useQuery({
+    queryKey: ["collection", id],
+    queryFn: () => api.getCollection(id),
+    enabled: !!id,
+  });
+}
+
 // ---- Questions ----
 export function useQuestions() {
   return useQuery({
@@ -176,9 +198,84 @@ export function useLeaveCircle() {
   });
 }
 
+export function useCircle(id: string) {
+  return useQuery({
+    queryKey: ["circle", id],
+    queryFn: () => api.getCircle(id),
+    enabled: !!id,
+  });
+}
+
+export function useCircleMessages(id: string) {
+  return useQuery({
+    queryKey: ["circle-messages", id],
+    queryFn: () => api.getCircleMessages(id),
+    enabled: !!id,
+    // Circle discussions are slower-moving than chat, so a gentler cadence.
+    refetchInterval: POLL_INTERVAL_MS * 2,
+  });
+}
+
+export function useSendCircleMessage(id: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: string) => api.sendCircleMessage(id, body),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["circle-messages", id] }),
+  });
+}
+
+/**
+ * Joining/leaving from the circle page needs the detail payload (roster,
+ * member count) refreshed as well as the sidebar list.
+ */
+export function useCircleMembership(id: string) {
+  const qc = useQueryClient();
+  const refresh = () => {
+    qc.invalidateQueries({ queryKey: ["circle", id] });
+    qc.invalidateQueries({ queryKey: ["circles"] });
+    qc.invalidateQueries({ queryKey: ["circle-messages", id] });
+  };
+  const join = useMutation({
+    mutationFn: () => api.joinCircle(id),
+    onSuccess: refresh,
+  });
+  const leave = useMutation({
+    mutationFn: () => api.leaveCircle(id),
+    onSuccess: refresh,
+  });
+  return { join, leave };
+}
+
 // ---- Chat ----
 export function useRooms() {
-  return useQuery({ queryKey: ["rooms"], queryFn: () => api.getRooms() });
+  return useQuery({
+    queryKey: ["rooms"],
+    queryFn: () => api.getRooms(),
+    // Keeps last-message previews and unread badges fresh in the sidebar.
+    refetchInterval: POLL_INTERVAL_MS * 3,
+  });
+}
+
+export function useRoomMessages(roomId?: string) {
+  return useQuery({
+    queryKey: ["room-messages", roomId],
+    queryFn: () => api.getRoomMessages(roomId as string),
+    enabled: !!roomId,
+    refetchInterval: POLL_INTERVAL_MS,
+  });
+}
+
+export function useSendRoomMessage(roomId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: string) => api.sendRoomMessage(roomId, body),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["room-messages", roomId] });
+      // Refresh the room list so the preview line updates immediately.
+      qc.invalidateQueries({ queryKey: ["rooms"] });
+    },
+  });
 }
 
 export function useDMs() {

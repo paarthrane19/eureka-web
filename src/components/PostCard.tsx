@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
+import { useAuthPrompt } from "@/lib/auth-prompt";
+import { useAuth } from "@/lib/auth";
 import { useBookmark, useUpvote } from "@/lib/hooks";
 import { relativeTime } from "@/lib/time";
 import type { Post } from "@/lib/types";
@@ -31,6 +33,8 @@ export function PostCard({
   onActivate?: () => void;
 }) {
   const router = useRouter();
+  const { user } = useAuth();
+  const { prompt } = useAuthPrompt();
   const upvote = useUpvote();
   const bookmark = useBookmark();
 
@@ -136,7 +140,11 @@ export function PostCard({
         </Link>
         <div className="flex items-center gap-1">
           <button
-            onClick={() => upvote.mutate(post.id)}
+            onClick={() =>
+              user
+                ? upvote.mutate(post.id)
+                : prompt({ message: "Sign in to upvote this discovery." })
+            }
             className={cn(
               "flex items-center gap-1.5 px-2 py-1 transition duration-fast hover:text-accent",
               post.upvoted ? "text-accent" : "text-muted",
@@ -155,7 +163,11 @@ export function PostCard({
             </span>
           </button>
           <button
-            onClick={() => bookmark.mutate(post.id)}
+            onClick={() =>
+              user
+                ? bookmark.mutate(post.id)
+                : prompt({ message: "Sign in to save this to your library." })
+            }
             className={cn(
               "flex items-center px-2 py-1 transition duration-fast hover:text-accent",
               post.bookmarked ? "text-accent" : "text-muted",

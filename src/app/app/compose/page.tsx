@@ -11,8 +11,20 @@ import { api } from "@/lib/api";
 import { CATEGORIES } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { ImagePicker } from "@/components/ImagePicker";
+import { RequireAuth } from "@/components/RequireAuth";
 
 export default function ComposePage() {
+  return (
+    <RequireAuth
+      title="Sign in to post"
+      message="Create a free account to share a discovery with Eureka."
+    >
+      <Compose />
+    </RequireAuth>
+  );
+}
+
+function Compose() {
   const router = useRouter();
   const qc = useQueryClient();
 

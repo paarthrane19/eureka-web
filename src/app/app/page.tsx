@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import { PostCard } from "@/components/PostCard";
 import { ScanLine } from "@/components/ScanLine";
+import { useAuth } from "@/lib/auth";
 import { useFeed } from "@/lib/hooks";
 import type { FeedKind } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
@@ -11,10 +13,55 @@ import { cn } from "@/lib/utils";
 
 const FILTERS = ["All", ...CATEGORIES];
 
+// useSearchParams needs a Suspense boundary to keep the route prerenderable.
 export default function FeedPage() {
-  const [feed, setFeed] = useState<FeedKind>("for-you");
-  const [category, setCategory] = useState("All");
+  return (
+    <Suspense fallback={<FeedSkeleton />}>
+      <Feed />
+    </Suspense>
+  );
+}
+
+function FeedSkeleton() {
+  return (
+    <div className="space-y-0">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="hairline-b px-4 py-5 md:px-6 md:py-6">
+          <div className="h-40 animate-pulse bg-surfaceAlt" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Feed() {
+  const { user } = useAuth();
+  const searchParams = useSearchParams();
+  // Signed-out visitors have no personalisation, so they only ever see the
+  // general feed. Signed-in users default to their personalised "For you".
+  const [feed, setFeed] = useState<FeedKind>(user ? "for-you" : "all");
+  // Explore links in with ?category=Physics, so honour that as the initial
+  // filter (validated against the known set so a junk param can't stick).
+  const initialCategory = searchParams.get("category");
+  const [category, setCategory] = useState(
+    initialCategory && FILTERS.includes(initialCategory)
+      ? initialCategory
+      : "All",
+  );
   const { data: posts, isLoading, isError } = useFeed(feed, category);
+
+  // If auth resolves after first paint (token bootstrap), snap a signed-out
+  // visitor's tab to "all" and a fresh sign-in back to "for-you".
+  useEffect(() => {
+    setFeed(user ? "for-you" : "all");
+  }, [user]);
+
+  // Keep the chips in sync if the ?category= param changes without a remount.
+  useEffect(() => {
+    if (initialCategory && FILTERS.includes(initialCategory)) {
+      setCategory(initialCategory);
+    }
+  }, [initialCategory]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [levels, setLevels] = useState<Record<string, number>>({});
@@ -87,9 +134,10 @@ export default function FeedPage() {
           </div>
         </div>
 
-        {/* Feed kind */}
+        {/* Feed kind — "For you" is personalised, so it's only offered to
+            signed-in users; visitors just get the general feed. */}
         <div className="mt-4 flex gap-6 px-4 md:px-6">
-          {(["for-you", "all"] as FeedKind[]).map((k) => (
+          {((user ? ["for-you", "all"] : ["all"]) as FeedKind[]).map((k) => (
             <button
               key={k}
               onClick={() => setFeed(k)}

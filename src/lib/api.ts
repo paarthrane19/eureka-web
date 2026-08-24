@@ -2,6 +2,7 @@ import type {
   AuthResponse,
   CategoryContent,
   ChatRoom,
+  CircleMessage,
   Collection,
   CollectionDetail,
   Comment,
@@ -15,6 +16,7 @@ import type {
   Post,
   Question,
   StudyCircle,
+  StudyCircleDetail,
   User,
 } from "./types";
 
@@ -316,20 +318,20 @@ export const api = {
   // ---- Study Circles ----
   getCircles: () => request<StudyCircle[]>("/circles"),
 
+  getCircle: (id: string) => request<StudyCircleDetail>(`/circles/${id}`),
+
   joinCircle: (id: string) =>
     request<StudyCircle>(`/circles/${id}/join`, { method: "POST" }),
 
   leaveCircle: (id: string) =>
     request<StudyCircle>(`/circles/${id}/leave`, { method: "POST" }),
 
-  // ---- Waitlist (public) ----
-  joinWaitlist: (email: string) =>
-    request<{ ok: boolean; count: number }>("/waitlist", {
-      method: "POST",
-      auth: false,
-      body: JSON.stringify({ email }),
-    }),
+  getCircleMessages: (id: string) =>
+    request<CircleMessage[]>(`/circles/${id}/messages`),
 
-  waitlistCount: () =>
-    request<{ count: number }>("/waitlist/count", { auth: false }),
+  sendCircleMessage: (id: string, body: string) =>
+    request<CircleMessage>(`/circles/${id}/messages`, {
+      method: "POST",
+      body: JSON.stringify({ body }),
+    }),
 };

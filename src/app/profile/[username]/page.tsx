@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import { ProfileScreen } from "@/components/ProfileScreen";
-import { api, getToken } from "@/lib/api";
+import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 export default function PublicProfilePage() {
@@ -24,8 +24,8 @@ export default function PublicProfilePage() {
   const postsQuery = useQuery({
     queryKey: ["userPosts", user?.id],
     queryFn: () => api.getUserPosts(user!.id),
-    // getUserPosts needs auth; skip the request for logged-out visitors.
-    enabled: !!user?.id && !!getToken(),
+    // Public read: profiles and their posts are visible to signed-out visitors.
+    enabled: !!user?.id,
   });
 
   if (userQuery.isLoading) {

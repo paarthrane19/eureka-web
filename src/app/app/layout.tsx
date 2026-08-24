@@ -1,8 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
 import { BottomNav } from "@/components/app/BottomNav";
 import { LeftSidebar } from "@/components/app/LeftSidebar";
 import { MobileTopBar } from "@/components/app/MobileTopBar";
@@ -10,14 +7,12 @@ import { RightSidebar } from "@/components/app/RightSidebar";
 import { useAuth } from "@/lib/auth";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
+  const { loading } = useAuth();
 
-  useEffect(() => {
-    if (!loading && !user) router.replace("/login");
-  }, [loading, user, router]);
-
-  if (loading || !user) {
+  // Public preview: anyone can browse the app shell signed-out. We only wait on
+  // the initial auth bootstrap so personalised state (upvotes, etc.) is known
+  // before first paint; we never redirect unauthenticated visitors away.
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-bg">
         <span className="h-6 w-6 animate-spin border-2 border-accent border-t-transparent" />

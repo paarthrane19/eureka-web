@@ -12,10 +12,11 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Avatar } from "@/components/Avatar";
 import { Logo } from "@/components/Logo";
+import { useAuthPrompt } from "@/lib/auth-prompt";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -29,8 +30,8 @@ const NAV: { label: string; href: string; icon: LucideIcon }[] = [
 
 export function LeftSidebar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { user, logout } = useAuth();
+  const { prompt } = useAuthPrompt();
   const { isDark, toggle } = useTheme();
 
   return (
@@ -69,13 +70,23 @@ export function LeftSidebar() {
         })}
       </nav>
 
-      <Link
-        href="/app/compose"
-        className="mt-6 inline-flex h-[46px] items-center justify-center gap-2 bg-accent px-4 font-mono text-sm font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105"
-      >
-        <PenLine size={16} />
-        Compose
-      </Link>
+      {user ? (
+        <Link
+          href="/app/compose"
+          className="mt-6 inline-flex h-[46px] items-center justify-center gap-2 bg-accent px-4 font-mono text-sm font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105"
+        >
+          <PenLine size={16} />
+          Compose
+        </Link>
+      ) : (
+        <button
+          onClick={() => prompt({ message: "Sign in to share a discovery." })}
+          className="mt-6 inline-flex h-[46px] items-center justify-center gap-2 bg-accent px-4 font-mono text-sm font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105"
+        >
+          <PenLine size={16} />
+          Compose
+        </button>
+      )}
 
       <div className="mt-auto flex flex-col gap-1">
         <button
@@ -85,29 +96,46 @@ export function LeftSidebar() {
           {isDark ? <Sun size={16} /> : <Moon size={16} />}
           {isDark ? "Light mode" : "Dark mode"}
         </button>
-        <button
-          onClick={logout}
-          className="flex items-center gap-3 px-3 py-2.5 font-sans text-sm text-muted transition duration-fast hover:text-heart"
-        >
-          <LogOut size={16} />
-          Log out
-        </button>
 
-        {user && (
-          <Link
-            href="/app/profile"
-            className="mt-2 flex items-center gap-2.5 hairline-t px-2 pt-4"
-          >
-            <Avatar name={user.name} color={user.avatar_color} size={32} />
-            <span className="min-w-0">
-              <span className="block truncate font-sans text-sm font-medium text-text">
-                {user.name}
+        {user ? (
+          <>
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 px-3 py-2.5 font-sans text-sm text-muted transition duration-fast hover:text-heart"
+            >
+              <LogOut size={16} />
+              Log out
+            </button>
+            <Link
+              href="/app/profile"
+              className="mt-2 flex items-center gap-2.5 hairline-t px-2 pt-4"
+            >
+              <Avatar name={user.name} color={user.avatar_color} size={32} />
+              <span className="min-w-0">
+                <span className="block truncate font-sans text-sm font-medium text-text">
+                  {user.name}
+                </span>
+                <span className="block truncate font-mono text-2xs text-faint">
+                  {user.email}
+                </span>
               </span>
-              <span className="block truncate font-mono text-2xs text-faint">
-                {user.email}
-              </span>
-            </span>
-          </Link>
+            </Link>
+          </>
+        ) : (
+          <div className="mt-2 flex flex-col gap-2 hairline-t px-1 pt-4">
+            <Link
+              href="/login"
+              className="flex h-9 items-center justify-center hairline font-mono text-2xs uppercase tracking-wider text-muted transition duration-fast hover:border-accent"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className="flex h-9 items-center justify-center bg-accent font-mono text-2xs font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105"
+            >
+              Sign up
+            </Link>
+          </div>
         )}
       </div>
     </aside>

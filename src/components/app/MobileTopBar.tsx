@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Moon, Sparkles, Sun } from "lucide-react";
+import { LogIn, LogOut, Moon, Sparkles, Sun } from "lucide-react";
 import Link from "next/link";
 
 import { Logo } from "@/components/Logo";
@@ -11,7 +11,7 @@ import { useTheme } from "@/lib/theme";
 // where the LeftSidebar is hidden. Not sticky, so page headers own the top edge
 // once you scroll.
 export function MobileTopBar() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const { isDark, toggle } = useTheme();
 
   return (
@@ -34,13 +34,23 @@ export function MobileTopBar() {
         >
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
-        <button
-          onClick={logout}
-          aria-label="Log out"
-          className="flex h-11 w-11 items-center justify-center text-muted transition duration-fast hover:text-heart"
-        >
-          <LogOut size={20} />
-        </button>
+        {user ? (
+          <button
+            onClick={logout}
+            aria-label="Log out"
+            className="flex h-11 w-11 items-center justify-center text-muted transition duration-fast hover:text-heart"
+          >
+            <LogOut size={20} />
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            aria-label="Log in"
+            className="flex h-11 w-11 items-center justify-center text-muted transition duration-fast hover:text-accent"
+          >
+            <LogIn size={20} />
+          </Link>
+        )}
       </div>
     </header>
   );

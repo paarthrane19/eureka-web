@@ -1,11 +1,10 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, Layers, ShieldCheck, Share2 } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Layers, ShieldCheck, Share2 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
-import { AnimatedCounter } from "@/components/landing/AnimatedCounter";
 import { CuriosityConstellation } from "@/components/landing/CuriosityConstellation";
 import { DepthDemo, GraphDemo, VerifiedDemo } from "@/components/landing/Demos";
 import { GridBackground } from "@/components/landing/GridBackground";
@@ -14,10 +13,8 @@ import { Parallax } from "@/components/landing/Parallax";
 import { PhoneMockup } from "@/components/landing/PhoneMockup";
 import { Reveal } from "@/components/landing/Reveal";
 import { ScrollProgress } from "@/components/landing/ScrollProgress";
-import { WaitlistForm } from "@/components/landing/WaitlistForm";
 import { Logo } from "@/components/Logo";
 import { ScanLine } from "@/components/ScanLine";
-import { api } from "@/lib/api";
 
 const HEADLINE = ["Every scroll", "teaches you", "something."];
 const HEADLINE_2 = ["Every swipe", "teaches you", "more."];
@@ -47,7 +44,6 @@ const DIFFERENTIATORS = [
 ];
 
 export default function LandingPage() {
-  const [count, setCount] = useState<number | null>(null);
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress: heroScroll } = useScroll({
@@ -57,13 +53,6 @@ export default function LandingPage() {
   const heroOpacity = useTransform(heroScroll, [0, 0.8], [1, 0]);
   const heroScale = useTransform(heroScroll, [0, 1], [1, 0.94]);
   const heroY = useTransform(heroScroll, [0, 1], [0, 80]);
-
-  useEffect(() => {
-    api
-      .waitlistCount()
-      .then((r) => setCount(r.count))
-      .catch(() => setCount(null));
-  }, []);
 
   return (
     <div className="relative min-h-screen bg-bg text-text">
@@ -92,7 +81,7 @@ export default function LandingPage() {
             >
               <span className="h-1.5 w-1.5 animate-pulse bg-accent" />
               <span className="font-mono text-2xs uppercase tracking-widest text-muted">
-                Now assembling · v1.0 · Est. 2026
+                Now live · v1.0 · Est. 2026
               </span>
             </motion.div>
 
@@ -135,20 +124,25 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.85 }}
               className="mt-8 max-w-lg"
             >
-              <WaitlistForm onCount={(n) => setCount(n)} />
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/signup"
+                  className="inline-flex h-[52px] items-center justify-center gap-2 bg-accent px-6 font-mono text-[15px] font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105"
+                >
+                  Start exploring
+                  <ArrowRight size={16} />
+                </Link>
+                <Link
+                  href="/app"
+                  className="inline-flex h-[52px] items-center justify-center gap-2 hairline px-6 font-mono text-[15px] uppercase tracking-wider text-muted transition duration-fast hover:border-accent"
+                >
+                  Browse as guest
+                </Link>
+              </div>
               <div className="mt-4 flex items-center gap-3">
                 <ScanLine className="w-16" height={2} />
                 <span className="font-mono text-2xs uppercase tracking-wider text-faint">
-                  {count !== null ? (
-                    <>
-                      <span className="text-accentInk">
-                        <AnimatedCounter value={count} />
-                      </span>{" "}
-                      curious minds already in
-                    </>
-                  ) : (
-                    "Join the founding class"
-                  )}
+                  Free forever · No invite needed
                 </span>
               </div>
             </motion.div>
@@ -235,7 +229,7 @@ export default function LandingPage() {
         </section>
       ))}
 
-      {/* ========================= WAITLIST CTA ====================== */}
+      {/* =========================== LAUNCH CTA ====================== */}
       <section className="relative isolate overflow-hidden hairline-t bg-surfaceAlt px-5 py-32 sm:py-40">
         <GridBackground />
         <div className="mx-auto max-w-2xl text-center">
@@ -246,22 +240,30 @@ export default function LandingPage() {
           </Reveal>
           <Reveal delay={0.05}>
             <h2 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-              Join{" "}
-              <span className="tabular-nums text-accent">
-                {count !== null ? <AnimatedCounter value={count} /> : "the"}
-              </span>{" "}
-              curious minds
+              The doors are <span className="text-accent">open</span>.
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mx-auto mt-5 max-w-lg font-sans text-lg leading-relaxed text-muted">
-              Be part of the founding class. Early members shape what Eureka
-              becomes — and get in before the doors open.
+              Eureka is live. Start a free account to post, save and go deeper —
+              or just browse the feed and see what curiosity looks like.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
-            <div className="mx-auto mt-10 max-w-lg">
-              <WaitlistForm onCount={(n) => setCount(n)} />
+            <div className="mx-auto mt-10 flex max-w-lg flex-col justify-center gap-3 sm:flex-row">
+              <Link
+                href="/signup"
+                className="inline-flex h-[52px] items-center justify-center gap-2 bg-accent px-6 font-mono text-[15px] font-bold uppercase tracking-wider text-accentText transition duration-fast hover:brightness-105"
+              >
+                Create your account
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/app"
+                className="inline-flex h-[52px] items-center justify-center gap-2 hairline px-6 font-mono text-[15px] uppercase tracking-wider text-muted transition duration-fast hover:border-accent"
+              >
+                Browse as guest
+              </Link>
             </div>
           </Reveal>
         </div>

@@ -4,6 +4,8 @@ import { ArrowBigUp, Check, Flame, Plus, Sparkles, Users } from "lucide-react";
 import Link from "next/link";
 
 import { CategoryTag } from "@/components/CategoryTag";
+import { useAuthPrompt } from "@/lib/auth-prompt";
+import { useAuth } from "@/lib/auth";
 import { categoryColor } from "@/lib/colors";
 import {
   useCircles,
@@ -36,6 +38,8 @@ export function RightSidebar() {
 // trending). Rendered in the desktop RightSidebar and, on mobile, on the
 // /app/discover tab.
 export function RightSidebarContent() {
+  const { user } = useAuth();
+  const { prompt } = useAuthPrompt();
   const daily = useDailyDiscovery();
   const questions = useQuestions();
   const circles = useCircles();
@@ -94,7 +98,11 @@ export function RightSidebarContent() {
           {questions.data?.map((q) => (
             <button
               key={q.id}
-              onClick={() => follow.mutate(q.id)}
+              onClick={() =>
+                user
+                  ? follow.mutate(q.id)
+                  : prompt({ message: "Sign in to follow questions." })
+              }
               aria-pressed={q.following}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[11px] tracking-tight transition duration-fast",
@@ -133,16 +141,30 @@ export function RightSidebarContent() {
         <SectionTitle>Study circles</SectionTitle>
         <div className="space-y-2">
           {circles.data?.map((c) => (
-            <div key={c.id} className="hairline px-3 py-2.5">
+            <div
+              key={c.id}
+              className="hairline px-3 py-2.5 transition duration-fast hover:border-accent"
+            >
               <div className="flex items-center justify-between gap-2">
-                <span className="flex min-w-0 items-center gap-1.5 font-sans text-[13px] font-medium text-text">
+                {/* The name opens the circle page; Join stays inline so the
+                    sidebar keeps working as a quick action. */}
+                <Link
+                  href={`/app/circles/${c.id}`}
+                  className="group flex min-w-0 items-center gap-1.5 font-sans text-[13px] font-medium text-text"
+                >
                   <Users size={13} className="shrink-0 text-muted" />
-                  <span className="truncate">{c.name}</span>
-                </span>
+                  <span className="truncate group-hover:text-accent">
+                    {c.name}
+                  </span>
+                </Link>
                 <button
-                  onClick={() =>
-                    c.joined ? leave.mutate(c.id) : join.mutate(c.id)
-                  }
+                  onClick={() => {
+                    if (!user) {
+                      prompt({ message: "Sign in to join study circles." });
+                      return;
+                    }
+                    c.joined ? leave.mutate(c.id) : join.mutate(c.id);
+                  }}
                   className={cn(
                     "h-6 shrink-0 px-2 font-mono text-[10px] uppercase tracking-wider transition duration-fast",
                     c.joined
@@ -153,9 +175,12 @@ export function RightSidebarContent() {
                   {c.joined ? "Joined" : "Join"}
                 </button>
               </div>
-              <p className="mt-1 font-mono text-2xs tracking-wider text-faint">
-                {c.member_count} members
-              </p>
+              <Link
+                href={`/app/circles/${c.id}`}
+                className="mt-1 block font-mono text-2xs tracking-wider text-faint transition duration-fast hover:text-muted"
+              >
+                {c.member_count} members · Open
+              </Link>
             </div>
           ))}
           {circles.isLoading &&

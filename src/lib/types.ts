@@ -99,6 +99,19 @@ export interface StudyCircle {
   created_at: string;
 }
 
+/** Circle page payload — the list card fields plus the resolved roster. */
+export interface StudyCircleDetail extends StudyCircle {
+  members: Author[];
+}
+
+export interface CircleMessage {
+  id: string;
+  circle_id: string;
+  author: Author;
+  body: string;
+  created_at: string;
+}
+
 export interface Comment {
   id: string;
   post_id: string;
