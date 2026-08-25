@@ -198,6 +198,8 @@ export const api = {
   createPost: (input: {
     headline: string;
     body: string;
+    /** The depth ladder readers step through: [hook, explanation, deep dive]. */
+    levels: [string, string, string];
     category: string;
     source_url?: string | null;
     images?: string[];
