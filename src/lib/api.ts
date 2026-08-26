@@ -148,6 +148,20 @@ export const api = {
 
   me: () => request<User>("/auth/me"),
 
+  forgotPassword: (email: string) =>
+    request<{ message: string }>("/auth/forgot-password", {
+      method: "POST",
+      auth: false,
+      body: JSON.stringify({ email }),
+    }),
+
+  resetPassword: (token: string, newPassword: string) =>
+    request<{ message: string }>("/auth/reset-password", {
+      method: "POST",
+      auth: false,
+      body: JSON.stringify({ token, new_password: newPassword }),
+    }),
+
   updateProfile: (
     updates: Partial<
       Pick<
