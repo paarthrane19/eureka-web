@@ -25,7 +25,7 @@ export default function ComposePage() {
 }
 
 // Mirrors LEVEL_LIMITS in the backend's schemas.py — keep the two in step.
-const LIMITS = { headline: 100, hook: 300, explanation: 300, deepDive: 600 };
+const LIMITS = { headline: 100, hook: 150, explanation: 400, deepDive: 800 };
 
 function Compose() {
   const router = useRouter();
