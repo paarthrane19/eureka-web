@@ -1,7 +1,7 @@
-# Eureka — Web
+# Supasift — Web
 
 The social platform for science. A Next.js 14 (App Router) app with a public
-landing page and the full Eureka product behind authentication, talking to the
+landing page and the full Supasift product behind authentication, talking to the
 existing FastAPI + MongoDB backend.
 
 ## Design system

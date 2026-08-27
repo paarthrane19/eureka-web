@@ -94,7 +94,7 @@ export function PhoneMockup() {
         <div className="hairline-b px-4 pb-3 pt-4">
           <div className="flex items-center justify-between">
             <span className="font-display text-lg font-bold tracking-tight">
-              Eureka
+              Supasift
             </span>
             <span className="font-mono text-[9px] tracking-widest text-faint">
               FOR YOU

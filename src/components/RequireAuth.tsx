@@ -40,7 +40,7 @@ export function RequireAuth({
         </h1>
         <p className="mt-3 font-sans text-[15px] leading-relaxed text-muted">
           {message ??
-            "Create a free account or sign in to unlock this part of Eureka."}
+            "Create a free account or sign in to unlock this part of Supasift."}
         </p>
         <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
           <Link

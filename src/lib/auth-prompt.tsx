@@ -133,7 +133,7 @@ function AuthPromptModal({
         </button>
 
         <h2 className="font-display text-2xl font-bold tracking-tight">
-          {mode === "login" ? "Welcome back" : "Join Eureka"}
+          {mode === "login" ? "Welcome back" : "Join Supasift"}
         </h2>
         <p className="mt-2 font-sans text-sm leading-relaxed text-muted">
           {message ??

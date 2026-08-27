@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * The official @eureka verification mark. A filled acid-green node with a
+ * The official @supasift verification mark. A filled acid-green node with a
  * hairline check, tuned to read as a scientific-instrument indicator rather
  * than a generic social checkmark.
  */

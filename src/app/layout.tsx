@@ -24,16 +24,16 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eureka.science";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://supasift.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Eureka — the social platform for science",
-    template: "%s · Eureka",
+    default: "Supasift — the social platform for science",
+    template: "%s · Supasift",
   },
   description:
-    "Eureka is the social platform for science — where discoveries are verified, curiosity is the currency, and going deeper is one swipe away.",
+    "Supasift is the social platform for science — where discoveries are verified, curiosity is the currency, and going deeper is one swipe away.",
   keywords: [
     "science",
     "social platform",
@@ -43,17 +43,17 @@ export const metadata: Metadata = {
     "study circles",
   ],
   openGraph: {
-    title: "Eureka — the social platform for science",
+    title: "Supasift — the social platform for science",
     description:
       "Where discoveries are verified, curiosity is the currency, and going deeper is one swipe away.",
     url: SITE_URL,
-    siteName: "Eureka",
+    siteName: "Supasift",
     type: "website",
-    images: [{ url: "/og", width: 1200, height: 630, alt: "Eureka" }],
+    images: [{ url: "/og", width: 1200, height: 630, alt: "Supasift" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eureka — the social platform for science",
+    title: "Supasift — the social platform for science",
     description:
       "Where discoveries are verified, curiosity is the currency, and going deeper is one swipe away.",
     images: ["/og"],

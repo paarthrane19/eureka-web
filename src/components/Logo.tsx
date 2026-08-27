@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-const W = 1446;
-const H = 857;
+const W = 1785;
+const H = 560;
 
 export function Logo({
   className = "h-7 w-auto",
@@ -14,7 +14,7 @@ export function Logo({
     <>
       <Image
         src="/logo-light.png"
-        alt="Eureka"
+        alt="Supasift"
         width={W}
         height={H}
         priority={priority}
@@ -22,7 +22,7 @@ export function Logo({
       />
       <Image
         src="/logo-dark.png"
-        alt="Eureka"
+        alt="Supasift"
         width={W}
         height={H}
         priority={priority}

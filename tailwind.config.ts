@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Laboratory Minimal — the exact design system shared with the Eureka mobile app.
+ * Laboratory Minimal — the exact design system shared with the Supasift mobile app.
  * Colors resolve to CSS variables so warm dark mode swaps under `.dark`
  * (see globals.css). The accent is a warm sage green.
  */

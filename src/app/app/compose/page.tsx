@@ -17,7 +17,7 @@ export default function ComposePage() {
   return (
     <RequireAuth
       title="Sign in to post"
-      message="Create a free account to share a discovery with Eureka."
+      message="Create a free account to share a discovery with Supasift."
     >
       <Compose />
     </RequireAuth>

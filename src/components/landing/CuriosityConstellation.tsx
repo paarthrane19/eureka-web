@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
  * Interactive "curiosity graph": floating question-nodes drift with light
  * physics, link to nearby nodes with hairlines, reach toward the cursor,
  * and occasionally pulse green as they get "verified". A living metaphor
- * for Eureka — you connect to questions, not people.
+ * for Supasift — you connect to questions, not people.
  */
 
 const QUESTIONS = [
@@ -177,7 +177,7 @@ export function CuriosityConstellation({
         }
       }
 
-      // nodes (squares — matches Eureka's dot-matrix motif)
+      // nodes (squares — matches Supasift's dot-matrix motif)
       for (const n of nodes) {
         const size = n.label ? 5 : 3;
         ctx.fillStyle = n.label

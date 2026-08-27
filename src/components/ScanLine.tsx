@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Eureka's signature motif: a thin accent hairline with a bright segment that
+ * Supasift's signature motif: a thin accent hairline with a bright segment that
  * scans across it, like a lab instrument sweeping a sample. Used under the
  * active tab, hero wordmark, and section headers.
  */

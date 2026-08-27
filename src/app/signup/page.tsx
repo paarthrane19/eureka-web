@@ -33,7 +33,7 @@ export default function SignupPage() {
 
   return (
     <AuthScaffold
-      title="Join Eureka"
+      title="Join Supasift"
       subtitle="Curiosity is the only requirement."
       footer={
         <>

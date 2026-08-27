@@ -7,7 +7,7 @@ import { Logo } from "@/components/Logo";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 
-// Minimal mobile header: the Eureka wordmark plus quick actions. Shown under md,
+// Minimal mobile header: the Supasift wordmark plus quick actions. Shown under md,
 // where the LeftSidebar is hidden. Not sticky, so page headers own the top edge
 // once you scroll.
 export function MobileTopBar() {

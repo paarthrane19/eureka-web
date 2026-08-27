@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { API_BASE_URL } from "@/lib/api";
 import type { Post } from "@/lib/types";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eureka.science";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://supasift.com";
 
 // Rebuild the sitemap hourly so newly published discoveries get indexed.
 export const revalidate = 3600;

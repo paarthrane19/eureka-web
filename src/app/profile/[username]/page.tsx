@@ -46,7 +46,7 @@ export default function PublicProfilePage() {
           href="/app"
           className="mt-4 inline-block font-mono text-2xs uppercase tracking-wider text-accentInk hover:underline"
         >
-          ← Back to Eureka
+          ← Back to Supasift
         </Link>
       </div>
     );

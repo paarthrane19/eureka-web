@@ -26,7 +26,7 @@ export function GET() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo} height={96} alt="Eureka" />
+          <img src={logo} height={96} alt="Supasift" />
           <span
             style={{
               color: "#A3A099",

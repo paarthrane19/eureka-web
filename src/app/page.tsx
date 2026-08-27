@@ -113,7 +113,7 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.7 }}
               className="mt-6 max-w-xl font-sans text-lg leading-relaxed text-muted"
             >
-              Eureka is the social platform for science — where discoveries are
+              Supasift is the social platform for science — where discoveries are
               verified, curiosity is the currency, and going deeper is one swipe
               away.
             </motion.p>
@@ -245,7 +245,7 @@ export default function LandingPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mx-auto mt-5 max-w-lg font-sans text-lg leading-relaxed text-muted">
-              Eureka is live. Start a free account to post, save and go deeper —
+              Supasift is live. Start a free account to post, save and go deeper —
               or just browse the feed and see what curiosity looks like.
             </p>
           </Reveal>
@@ -284,7 +284,7 @@ export default function LandingPage() {
           <div className="flex flex-col gap-3">
             {[
               { label: "About", href: "#" },
-              { label: "Contact", href: "mailto:hello@eureka.science" },
+              { label: "Contact", href: "mailto:hello@supasift.com" },
               { label: "Instagram", href: "https://instagram.com" },
             ].map((l) => (
               <Link
@@ -303,7 +303,7 @@ export default function LandingPage() {
         </div>
         <div className="mx-auto mt-12 flex max-w-6xl items-center justify-between border-t-0">
           <span className="font-mono text-2xs tracking-widest text-faint">
-            © 2026 EUREKA
+            © 2026 SUPASIFT
           </span>
           <span className="font-mono text-2xs tracking-widest text-faint">
             THE SCIENCE NETWORK
