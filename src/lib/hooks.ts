@@ -31,11 +31,14 @@ export function useFeed(feed: FeedKind, category: string) {
   });
 }
 
-export function usePost(id: string) {
+export function usePost(id: string, initialData?: Post) {
   return useQuery({
     queryKey: ["post", id],
     queryFn: () => api.getPost(id),
     enabled: !!id,
+    // Seeded from the server render so the article lands in the initial HTML.
+    // It is stale on arrival, so the client still refetches for signed-in state.
+    initialData,
   });
 }
 

@@ -1,0 +1,65 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+
+import { ProfileScreen } from "@/components/ProfileScreen";
+import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+
+export function PublicProfileClient({ username }: { username: string }) {
+  const { user: me } = useAuth();
+
+  const userQuery = useQuery({
+    queryKey: ["profile", username],
+    queryFn: () => api.getUserByUsername(username),
+    enabled: !!username,
+  });
+
+  const user = userQuery.data;
+
+  const postsQuery = useQuery({
+    queryKey: ["userPosts", user?.id],
+    queryFn: () => api.getUserPosts(user!.id),
+    // Public read: profiles and their posts are visible to signed-out visitors.
+    enabled: !!user?.id,
+  });
+
+  if (userQuery.isLoading) {
+    return (
+      <div className="mx-auto max-w-feed px-6 py-24 text-center font-mono text-2xs uppercase tracking-widest text-faint">
+        Loading…
+      </div>
+    );
+  }
+
+  if (userQuery.isError || !user) {
+    return (
+      <div className="mx-auto max-w-feed px-6 py-24 text-center">
+        <p className="font-mono text-2xs uppercase tracking-widest text-faint">
+          No account @{username}
+        </p>
+        <Link
+          href="/app"
+          className="mt-4 inline-block font-mono text-2xs uppercase tracking-wider text-accentInk hover:underline"
+        >
+          ← Back to Supasift
+        </Link>
+      </div>
+    );
+  }
+
+  // Viewing your own public profile redirects behaviour to edit mode.
+  const isMe = me?.id === user.id;
+
+  return (
+    <div className="mx-auto min-h-screen max-w-feed hairline-x">
+      <ProfileScreen
+        user={user}
+        posts={postsQuery.data}
+        isMe={isMe}
+        onUpdated={() => userQuery.refetch().then(() => undefined)}
+      />
+    </div>
+  );
+}

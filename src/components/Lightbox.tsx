@@ -3,12 +3,16 @@
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import { altFor } from "@/lib/alt-text";
+
 export function Lightbox({
   images,
+  headline,
   startIndex = 0,
   onClose,
 }: {
   images: string[];
+  headline: string;
   startIndex?: number;
   onClose: () => void;
 }) {
@@ -67,7 +71,7 @@ export function Lightbox({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={images[index]}
-        alt=""
+        alt={altFor(headline, index, images.length)}
         onClick={(e) => e.stopPropagation()}
         className="max-h-[85vh] max-w-full object-contain"
       />

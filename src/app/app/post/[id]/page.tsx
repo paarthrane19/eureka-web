@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { API_BASE_URL } from "@/lib/api";
+import { metaDescription, SITE_NAME, SITE_URL } from "@/lib/site";
 import type { Post } from "@/lib/types";
 
 import { PostDetailClient } from "./PostDetailClient";
@@ -20,6 +21,13 @@ async function fetchPost(id: string): Promise<Post | null> {
   }
 }
 
+// Only absolute http(s) images unfurl on social or validate in schema.org
+// markup; uploaded data-URLs do neither.
+function shareableImage(post: Post): string | undefined {
+  const first = post.images?.[0];
+  return first && /^https?:\/\//.test(first) ? first : undefined;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -27,15 +35,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const post = await fetchPost(params.id);
   if (!post) {
-    return { title: "Discovery" };
+    return { title: "Discovery not found", robots: { index: false } };
   }
 
-  const description = (post.levels?.[0] || post.body || "").slice(0, 200);
-  // Only absolute http(s) images unfurl on social; uploaded data-URLs don't, so
-  // fall back to the site's default /og card in that case (inherited from the
-  // root layout by leaving openGraph.images unset).
-  const first = post.images?.[0];
-  const image = first && /^https?:\/\//.test(first) ? first : undefined;
+  const description = metaDescription(post.levels?.[0] || post.body || "");
+  // Falls back to the site's default /og card by leaving openGraph.images unset.
+  const image = shareableImage(post);
   const url = `/app/post/${post.id}`;
 
   return {
@@ -47,6 +52,9 @@ export async function generateMetadata({
       description,
       url,
       type: "article",
+      publishedTime: post.created_at,
+      authors: [`${SITE_URL}/profile/${post.author.username}`],
+      section: post.category,
       ...(image ? { images: [{ url: image }] } : {}),
     },
     twitter: {
@@ -58,10 +66,79 @@ export async function generateMetadata({
   };
 }
 
-export default function PostDetailPage({
+function articleSchema(post: Post) {
+  const url = `${SITE_URL}/app/post/${post.id}`;
+  const image = shareableImage(post);
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
+    headline: post.headline,
+    description: metaDescription(post.levels?.[0] || post.body || ""),
+    articleBody: post.levels?.join("\n\n") || post.body,
+    articleSection: post.category,
+    datePublished: post.created_at,
+    dateModified: post.created_at,
+    inLanguage: "en",
+    ...(image ? { image: [image] } : {}),
+    author: {
+      "@type": "Person",
+      name: post.author.name,
+      url: `${SITE_URL}/profile/${post.author.username}`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon-512.png` },
+    },
+    // Every discovery is published with its sources; exposing them as citations
+    // is what lets a search engine treat this as sourced science rather than
+    // an unattributed summary.
+    ...(post.credibility?.sources?.length
+      ? {
+          citation: post.credibility.sources.map((s) => ({
+            "@type": "CreativeWork",
+            name: s.title,
+            url: s.url,
+          })),
+        }
+      : {}),
+    interactionStatistic: [
+      {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/LikeAction",
+        userInteractionCount: post.upvotes,
+      },
+      {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/CommentAction",
+        userInteractionCount: post.comment_count,
+      },
+    ],
+  };
+}
+
+export default async function PostDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  return <PostDetailClient id={params.id} />;
+  const post = await fetchPost(params.id);
+
+  return (
+    <>
+      {post && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(articleSchema(post)),
+          }}
+        />
+      )}
+      <PostDetailClient id={params.id} initialPost={post ?? undefined} />
+    </>
+  );
 }

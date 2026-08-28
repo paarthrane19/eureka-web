@@ -27,12 +27,19 @@ import {
   useUpvote,
 } from "@/lib/hooks";
 import { relativeTime } from "@/lib/time";
+import type { Post } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export function PostDetailClient({ id }: { id: string }) {
+export function PostDetailClient({
+  id,
+  initialPost,
+}: {
+  id: string;
+  initialPost?: Post;
+}) {
   const { user } = useAuth();
   const { prompt } = useAuthPrompt();
-  const { data: post, isLoading } = usePost(id);
+  const { data: post, isLoading } = usePost(id, initialPost);
   const comments = useComments(id);
   const addComment = useAddComment(id);
   const upvote = useUpvote();
@@ -127,7 +134,7 @@ export function PostDetailClient({ id }: { id: string }) {
 
         {post.images?.length > 0 && (
           <div className="mt-6">
-            <PostImages images={post.images} />
+            <PostImages images={post.images} headline={post.headline} />
           </div>
         )}
 

@@ -1,68 +1,54 @@
-"use client";
+import type { Metadata } from "next";
 
-import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { API_BASE_URL } from "@/lib/api";
+import type { User } from "@/lib/types";
 
-import { ProfileScreen } from "@/components/ProfileScreen";
-import { api } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
+import { PublicProfileClient } from "./PublicProfileClient";
 
-export default function PublicProfilePage() {
-  const params = useParams<{ username: string }>();
-  const username = params.username;
-  const { user: me } = useAuth();
-
-  const userQuery = useQuery({
-    queryKey: ["profile", username],
-    queryFn: () => api.getUserByUsername(username),
-    enabled: !!username,
-  });
-
-  const user = userQuery.data;
-
-  const postsQuery = useQuery({
-    queryKey: ["userPosts", user?.id],
-    queryFn: () => api.getUserPosts(user!.id),
-    // Public read: profiles and their posts are visible to signed-out visitors.
-    enabled: !!user?.id,
-  });
-
-  if (userQuery.isLoading) {
-    return (
-      <div className="mx-auto max-w-feed px-6 py-24 text-center font-mono text-2xs uppercase tracking-widest text-faint">
-        Loading…
-      </div>
+// Server-side fetch used only for building share/SEO metadata. Profile reads are
+// public on the API, so no auth header is needed.
+async function fetchUser(username: string): Promise<User | null> {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/users/by-username/${encodeURIComponent(username)}`,
+      { next: { revalidate: 300 } },
     );
+    if (!res.ok) return null;
+    return (await res.json()) as User;
+  } catch {
+    return null;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { username: string };
+}): Promise<Metadata> {
+  const user = await fetchUser(params.username);
+  if (!user) {
+    return { title: "Profile not found", robots: { index: false } };
   }
 
-  if (userQuery.isError || !user) {
-    return (
-      <div className="mx-auto max-w-feed px-6 py-24 text-center">
-        <p className="font-mono text-2xs uppercase tracking-widest text-faint">
-          No account @{username}
-        </p>
-        <Link
-          href="/app"
-          className="mt-4 inline-block font-mono text-2xs uppercase tracking-wider text-accentInk hover:underline"
-        >
-          ← Back to Supasift
-        </Link>
-      </div>
-    );
-  }
+  const title = `${user.name} (@${user.username})`;
+  const description =
+    user.bio?.trim() ||
+    `${user.name} shares verified science discoveries on Supasift.`;
+  const url = `/profile/${user.username}`;
 
-  // Viewing your own public profile redirects behaviour to edit mode.
-  const isMe = me?.id === user.id;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url, type: "profile" },
+    twitter: { card: "summary", title, description },
+  };
+}
 
-  return (
-    <div className="mx-auto min-h-screen max-w-feed hairline-x">
-      <ProfileScreen
-        user={user}
-        posts={postsQuery.data}
-        isMe={isMe}
-        onUpdated={() => userQuery.refetch().then(() => undefined)}
-      />
-    </div>
-  );
+export default function PublicProfilePage({
+  params,
+}: {
+  params: { username: string };
+}) {
+  return <PublicProfileClient username={params.username} />;
 }

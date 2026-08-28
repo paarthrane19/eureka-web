@@ -4,6 +4,7 @@ import { ArrowBigUp, Check, Flame, Plus, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { CategoryTag } from "@/components/CategoryTag";
+import { altFor } from "@/lib/alt-text";
 import { useAuthPrompt } from "@/lib/auth-prompt";
 import { useAuth } from "@/lib/auth";
 import { categoryColor } from "@/lib/colors";
@@ -59,7 +60,7 @@ export default function ExplorePage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={daily.data.images[0]}
-                      alt=""
+                      alt={altFor(daily.data.headline, 0, 1)}
                       className="h-full w-full object-cover transition duration-fast group-hover:scale-[1.02]"
                     />
                   </div>

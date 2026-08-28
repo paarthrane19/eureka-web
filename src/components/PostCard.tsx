@@ -87,7 +87,7 @@ export function PostCard({
         </p>
       </div>
 
-      {post.images?.length > 0 && <PostImages images={post.images} />}
+      {post.images?.length > 0 && <PostImages images={post.images} headline={post.headline} />}
 
       {/* Depth navigation */}
       <div className="mt-4 flex items-center justify-between">

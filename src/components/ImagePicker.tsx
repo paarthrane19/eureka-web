@@ -60,7 +60,11 @@ export function ImagePicker({
         {images.map((src, i) => (
           <div key={i} className="relative h-24 w-24 overflow-hidden hairline">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt="" className="h-full w-full object-cover" />
+            <img
+              src={src}
+              alt={`Attached image ${i + 1}`}
+              className="h-full w-full object-cover"
+            />
             <button
               type="button"
               aria-label="Remove image"

@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 
+import { altFor } from "@/lib/alt-text";
 import { cn } from "@/lib/utils";
 
 import { Lightbox } from "./Lightbox";
 
 export function PostImages({
   images,
+  headline,
   className,
 }: {
   images: string[];
+  /** Post headline — the only description we have for reader-supplied images. */
+  headline: string;
   className?: string;
 }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -41,7 +45,7 @@ export function PostImages({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={src}
-              alt=""
+              alt={altFor(headline, i, images.length)}
               className={cn(
                 "block w-full object-cover transition duration-medium group-hover:brightness-95",
                 images.length === 2
@@ -56,6 +60,7 @@ export function PostImages({
       {lightbox !== null && (
         <Lightbox
           images={images}
+          headline={headline}
           startIndex={lightbox}
           onClose={() => setLightbox(null)}
         />
