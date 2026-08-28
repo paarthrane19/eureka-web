@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowBigUp, Check, Flame, Plus, Sparkles, Users } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { CategoryTag } from "@/components/CategoryTag";
@@ -8,6 +9,7 @@ import { altFor } from "@/lib/alt-text";
 import { useAuthPrompt } from "@/lib/auth-prompt";
 import { useAuth } from "@/lib/auth";
 import { categoryColor } from "@/lib/colors";
+import { isOptimizable } from "@/lib/images";
 import {
   useCircles,
   useDailyDiscovery,
@@ -62,12 +64,14 @@ export function RightSidebarContent() {
             className="group block hairline transition duration-fast hover:border-accent"
           >
             {daily.data.images?.[0] && (
-              <div className="aspect-[16/9] w-full overflow-hidden bg-surfaceAlt">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-surfaceAlt">
+                <Image
                   src={daily.data.images[0]}
                   alt={altFor(daily.data.headline, 0, 1)}
-                  className="h-full w-full object-cover transition duration-fast group-hover:scale-[1.02]"
+                  fill
+                  sizes="320px"
+                  unoptimized={!isOptimizable(daily.data.images[0])}
+                  className="object-cover transition duration-fast group-hover:scale-[1.02]"
                 />
               </div>
             )}

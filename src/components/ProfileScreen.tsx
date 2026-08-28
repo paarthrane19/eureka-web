@@ -10,10 +10,12 @@ import {
   Pin,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
 import { api } from "@/lib/api";
+import { isOptimizable } from "@/lib/images";
 import { joinedDate } from "@/lib/time";
 import type { Post, User } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
@@ -127,11 +129,13 @@ export function ProfileScreen({
       {/* Cover */}
       <div className="relative h-40 w-full overflow-hidden bg-surfaceAlt hairline-b">
         {user.cover_image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={user.cover_image}
             alt={`Cover image chosen by ${user.name}`}
-            className="h-full w-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 680px"
+            unoptimized={!isOptimizable(user.cover_image)}
+            className="object-cover"
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-surfaceAlt to-surface" />

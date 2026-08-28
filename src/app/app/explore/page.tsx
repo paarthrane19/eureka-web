@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowBigUp, Check, Flame, Plus, Sparkles } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { CategoryTag } from "@/components/CategoryTag";
@@ -8,6 +9,7 @@ import { altFor } from "@/lib/alt-text";
 import { useAuthPrompt } from "@/lib/auth-prompt";
 import { useAuth } from "@/lib/auth";
 import { categoryColor } from "@/lib/colors";
+import { isOptimizable } from "@/lib/images";
 import {
   useCollections,
   useDailyDiscovery,
@@ -56,12 +58,14 @@ export default function ExplorePage() {
             >
               <div className="flex flex-col gap-5 p-5 md:flex-row md:items-center md:p-6">
                 {daily.data.images?.[0] && (
-                  <div className="aspect-[16/9] w-full shrink-0 overflow-hidden bg-bg md:aspect-square md:w-40">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                  <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-bg md:aspect-square md:w-40">
+                    <Image
                       src={daily.data.images[0]}
                       alt={altFor(daily.data.headline, 0, 1)}
-                      className="h-full w-full object-cover transition duration-fast group-hover:scale-[1.02]"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 160px"
+                      unoptimized={!isOptimizable(daily.data.images[0])}
+                      className="object-cover transition duration-fast group-hover:scale-[1.02]"
                     />
                   </div>
                 )}

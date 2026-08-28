@@ -1,9 +1,11 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
 import { altFor } from "@/lib/alt-text";
+import { isOptimizable } from "@/lib/images";
 
 export function Lightbox({
   images,
@@ -68,13 +70,22 @@ export function Lightbox({
         </button>
       )}
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={images[index]}
-        alt={altFor(headline, index, images.length)}
+      {/* A lightbox image can be any shape, so the viewer claims a fixed frame
+          and letterboxes within it rather than resizing once the image loads. */}
+      <div
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[85vh] max-w-full object-contain"
-      />
+        className="relative h-[85vh] w-full max-w-5xl"
+      >
+        <Image
+          src={images[index]}
+          alt={altFor(headline, index, images.length)}
+          fill
+          sizes="100vw"
+          priority
+          unoptimized={!isOptimizable(images[index])}
+          className="object-contain"
+        />
+      </div>
 
       {many && (
         <button

@@ -1,11 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 import { altFor } from "@/lib/alt-text";
+import { isOptimizable } from "@/lib/images";
 import { cn } from "@/lib/utils";
 
 import { Lightbox } from "./Lightbox";
+
+// The content column tops out at ~720px; a pair sits in two columns within it.
+const SINGLE_SIZES = "(max-width: 768px) 100vw, 720px";
+const PAIR_SIZES = "(max-width: 768px) 50vw, 360px";
 
 export function PostImages({
   images,
@@ -20,6 +26,8 @@ export function PostImages({
   const [lightbox, setLightbox] = useState<number | null>(null);
   if (!images?.length) return null;
 
+  const pair = images.length === 2;
+
   const open = (i: number, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -31,7 +39,7 @@ export function PostImages({
       <div
         className={cn(
           "mt-4 grid gap-1.5 overflow-hidden rounded-lg hairline",
-          images.length === 2 ? "grid-cols-2" : "grid-cols-1",
+          pair ? "grid-cols-2" : "grid-cols-1",
           className,
         )}
       >
@@ -40,18 +48,20 @@ export function PostImages({
             key={i}
             type="button"
             onClick={(e) => open(i, e)}
-            className="group relative block overflow-hidden bg-surfaceAlt"
+            // The frame is fixed so its height is known before the image
+            // arrives; without it the card reflows on every image load.
+            className={cn(
+              "group relative block w-full overflow-hidden bg-surfaceAlt",
+              pair ? "aspect-square" : "aspect-video",
+            )}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={src}
               alt={altFor(headline, i, images.length)}
-              className={cn(
-                "block w-full object-cover transition duration-medium group-hover:brightness-95",
-                images.length === 2
-                  ? "aspect-square"
-                  : "max-h-[70vh] md:max-h-[420px]",
-              )}
+              fill
+              sizes={pair ? PAIR_SIZES : SINGLE_SIZES}
+              unoptimized={!isOptimizable(src)}
+              className="object-cover transition duration-medium group-hover:brightness-95"
             />
           </button>
         ))}
