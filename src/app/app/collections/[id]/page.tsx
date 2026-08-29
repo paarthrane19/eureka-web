@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CategoryTag } from "@/components/CategoryTag";
 import { useCollection } from "@/lib/hooks";
 import { categoryColor } from "@/lib/colors";
+import { externalUrl } from "@/lib/links";
 
 /**
  * A curated collection and its reading list. Every item links out to its
@@ -94,6 +95,7 @@ export default function CollectionPage({
               )}
 
               {data.items.map((item, i) => {
+                const href = externalUrl(item.source_url);
                 const body = (
                   <>
                     <div className="flex items-start gap-3">
@@ -107,7 +109,7 @@ export default function CollectionPage({
                         <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">
                           {item.body}
                         </p>
-                        {item.source_url && (
+                        {href && (
                           <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-wider text-accentInk">
                             Read the source
                             <ExternalLink size={12} />
@@ -118,11 +120,12 @@ export default function CollectionPage({
                   </>
                 );
 
-                // Items without a source aren't links — no dead click targets.
-                return item.source_url ? (
+                // Items without a usable source aren't links — no dead click
+                // targets, and nothing unsafe reaches an href.
+                return href ? (
                   <a
                     key={item.id}
-                    href={item.source_url}
+                    href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block hairline p-5 transition duration-fast hover:border-accent"

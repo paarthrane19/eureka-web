@@ -16,6 +16,7 @@ import { useRef, useState } from "react";
 
 import { api } from "@/lib/api";
 import { isOptimizable } from "@/lib/images";
+import { displayUrl, externalUrl } from "@/lib/links";
 import { joinedDate } from "@/lib/time";
 import type { Post, User } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
@@ -24,10 +25,6 @@ import { cn } from "@/lib/utils";
 import { Avatar } from "./Avatar";
 import { PostCard } from "./PostCard";
 import { VerifiedBadge } from "./VerifiedBadge";
-
-function normalizeLink(url: string): string {
-  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
-}
 
 function Stat({ value, label }: { value: string | number; label: string }) {
   return (
@@ -69,6 +66,9 @@ export function ProfileScreen({
   const [location, setLocation] = useState(user.location ?? "");
   const [workingAt, setWorkingAt] = useState(user.working_at ?? "");
   const [interests, setInterests] = useState<string[]>(user.interests ?? []);
+
+  // Profile links are typed by hand, so they routinely arrive bare ("foo.com").
+  const profileLink = externalUrl(user.link);
 
   const refreshAll = async () => {
     await onUpdated?.();
@@ -303,14 +303,14 @@ export function ProfileScreen({
                   <MapPin size={12} /> {user.location}
                 </span>
               )}
-              {user.link && (
+              {profileLink && (
                 <a
-                  href={normalizeLink(user.link)}
+                  href={profileLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-accentInk transition hover:underline"
                 >
-                  <LinkIcon size={12} /> {user.link.replace(/^https?:\/\//, "")}
+                  <LinkIcon size={12} /> {displayUrl(profileLink)}
                 </a>
               )}
             </div>
